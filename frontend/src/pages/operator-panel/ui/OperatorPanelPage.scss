@@ -1,0 +1,29 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.operator-panel {
+  display: flex;
+  column-gap: rem(15);
+  
+  &__logs, &__mission-buttons, &__status-animation {
+    z-index: 1;
+  }
+
+  &__mission-buttons {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(15);
+  }
+
+  &__logs {
+    flex: 1;
+    display: flex;
+  }
+
+  &__status-animation {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(15);
+  }
+}

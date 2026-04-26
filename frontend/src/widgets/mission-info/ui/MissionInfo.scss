@@ -1,0 +1,15 @@
+@use '@shared/lib/styles/helpers' as *;
+
+.mission-info {
+  flex: 0.5;
+  border: 3px solid var(--color-black-20);
+  background-color: var(--color-black-08);
+  border-radius: var(--border-radius-m);
+
+  overflow-y: auto;
+  
+
+  &__info {
+    padding: rem(10);
+  }
+}

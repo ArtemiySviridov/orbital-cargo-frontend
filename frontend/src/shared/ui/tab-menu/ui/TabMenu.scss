@@ -1,0 +1,13 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.tab-menu {
+  display: flex;
+  justify-content: space-between;
+  column-gap: rem(5);
+
+  border: 2px solid var(--color-black-12);
+  border-radius: var(--border-radius-m);
+  padding: rem(8);
+
+  background-color: inherit;
+}

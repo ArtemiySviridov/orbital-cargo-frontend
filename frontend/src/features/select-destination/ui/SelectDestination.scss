@@ -1,0 +1,12 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.select-destination {
+  display: flex;
+  flex-direction: column;
+  row-gap: rem(10);
+
+  &__title {
+    border-bottom: 1px solid var(--color-red-90);
+    width: fit-content;
+  }
+}

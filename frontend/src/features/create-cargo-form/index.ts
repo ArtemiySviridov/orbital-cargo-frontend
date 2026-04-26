@@ -1,0 +1,1 @@
+export { default as CreateCargo } from "./ui/CreateCargo";

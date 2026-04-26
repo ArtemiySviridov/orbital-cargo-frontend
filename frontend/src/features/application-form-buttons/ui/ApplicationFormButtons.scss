@@ -1,0 +1,7 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.application-form-buttons {
+  display: flex;
+  flex-direction: column;
+  row-gap: rem(10);
+}

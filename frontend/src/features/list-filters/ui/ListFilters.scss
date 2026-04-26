@@ -1,0 +1,13 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.list-filters {
+  @include fluid-text(16, 14);
+  display: flex;
+  align-items: center;
+  column-gap: rem(20);
+  padding: rem(5) rem(10);
+  border: 2px dashed var(--color-black-15);
+  border-radius: var(--border-radius-m);
+  background-color: var(--color-black-12);
+  color: var(--color-white);
+}

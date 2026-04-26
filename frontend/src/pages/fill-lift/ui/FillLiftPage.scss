@@ -1,0 +1,17 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.fill-lift {
+  &__content {
+    display: flex;
+    column-gap: rem(20);
+  }
+
+  @include tablet {
+    &__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

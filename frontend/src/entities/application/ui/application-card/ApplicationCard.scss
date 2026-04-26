@@ -1,0 +1,49 @@
+@use '@/shared/lib/styles/helpers' as *;
+
+.application-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: rem(20) rem(70);
+
+  border: 1px solid var(--color-black-15);
+  border-radius: var(--border-radius-m);
+  background-color: var(--color-black-08);
+  transition: var(--transition-duration);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+
+  &__number, &__date, &__status {
+    z-index: 1;
+  }
+
+  @include hover {
+    transform: translateY(-2px);
+    background-color: var(--color-black-06);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    color: var(--color-white);
+    border-color: var(--color-red-90);
+    transition: all 0.3s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border: 2px solid var(--color-red-45);
+      border-radius: var(--border-radius-m);
+      opacity: 0.7;
+      filter: blur(4px);
+      animation: neon-pulse 1.5s infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+  }
+}
+
+@keyframes neon-pulse {
+  0%   { box-shadow: 0 0 8px var(--color-red-45), 0 0 16px var(--color-red-45); }
+  100% { box-shadow: 0 0 20px var(--color-red-45), 0 0 40px var(--color-red-45), 0 0 60px #ff004480; }
+}

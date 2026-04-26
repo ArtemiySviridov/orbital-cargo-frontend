@@ -1,0 +1,13 @@
+@use '@shared/lib/styles/helpers' as *;
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: rem(15) rem(30);
+
+  &__title {
+    border-bottom: 1px solid var(--color-red-45);
+  }
+
+}

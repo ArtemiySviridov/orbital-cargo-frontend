@@ -1,0 +1,1 @@
+export { default as ApplicationDetailsPage } from "./ui/ApplicationDetailsPage";

@@ -1,0 +1,106 @@
+@use 'helpers' as *;
+
+body {
+  @include fluid-text(18, 14);
+
+  background-color: var(--color-black-08);
+  color: var(--color-grey-60);
+
+  font-family: var(--font-family-base);
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  color: var(--color-white);
+}
+
+h1, .h1 {
+  @include fluid-text(32, 24);
+  font-weight: 700;
+} 
+
+h2, .h2 {
+  @include fluid-text(24, 20);
+  font-weight: 700;
+}
+
+h3, .h3 {
+  @include fluid-text(20, 18);
+  font-weight: 700;
+}
+
+h4, .h4 {
+  @include fluid-text(18, 16);
+  font-weight: 700;
+}
+
+h5, .h5 {
+  @include fluid-text(16, 14);
+  font-weight: 700;
+}
+
+h6, .h6 {
+  @include fluid-text(14, 12);
+  font-weight: 700;
+}
+
+a,
+button,
+label,
+input,
+textarea,
+select,
+svg * {
+  transition-duration: var(--transition-duration);
+}
+
+a {
+  color: inherit;
+
+  @include hover {
+    color: var(--color-black-12);
+  }
+
+  &[class] {
+    text-decoration: none;
+  }
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+// :focus-visible {
+//   outline: rem(2) dashed var(--color-red-90);
+//   outline-offset: rem(2);
+//   transition-duration: 0s !important;
+// }
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-black-08);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-black-20);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-black-15);
+}

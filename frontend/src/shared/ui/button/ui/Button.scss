@@ -1,0 +1,57 @@
+@use '@shared/lib/styles/helpers' as *;
+
+.button {
+  @include fluid-text(16, 14);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: rem(6);
+
+  padding: rem(8);
+  color: var(--color-white);
+  border-radius: var(--border-radius-s);
+  font-weight: 600;
+
+  height: fit-content;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--primary {
+    background-color: var(--color-red-45);
+
+    @include hover {
+      background-color: var(--color-red-70);
+    }
+
+    &:active {
+      background-color: var(--color-red-90);
+    }
+  }
+
+  &--secondary {
+    background-color: var(--color-black-25);
+
+    @include hover {
+      background-color: var(--color-grey-60);
+
+      &:active {
+        background-color: var(--color-red-90);
+      }
+    }
+  }
+
+  &--disabled {
+    background-color: var(--color-black-20);
+    color: var(--color-black-30);
+
+    @include hover {
+      background-color: var(--color-black-20);
+    }
+  }
+}

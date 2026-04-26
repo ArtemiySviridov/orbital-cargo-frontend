@@ -1,0 +1,28 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.lift-grid {
+  width: 60%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 12px;
+
+  grid-auto-flow: dense;
+
+  padding: rem(20);
+
+  background-color: var(--color-black-10);
+  border: 1px solid var(--color-black-15);
+  border-radius: var(--border-radius-m);
+
+  z-index: 1;
+
+  @include tablet {
+   &__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

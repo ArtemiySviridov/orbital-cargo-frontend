@@ -1,0 +1,38 @@
+@use '@/shared/lib/styles/helpers' as *;
+
+.create-cargo {
+  display: flex;
+  flex-direction: column;
+  row-gap: rem(18);
+
+  &__title {
+    border-bottom: rem(1) solid var(--color-red-90);
+    max-width: fit-content;
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(10);
+    padding: rem(14);
+    background-color: var(--color-black-10);
+    border: 1px solid var(--color-black-15);
+    border-radius: var(--border-radius-m);
+  }
+
+  .fields__fields-block {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    column-gap: rem(5);
+    > :not(:last-child) {
+      flex: 1 1 0; // Равномерное распределение пространства
+      min-width: 0; // Позволяет элементам сжиматься
+    }
+    
+    // Стили для кнопки
+    > :last-child {
+      flex: 0 0 auto; // Кнопка не растягивается
+    }
+  }
+}

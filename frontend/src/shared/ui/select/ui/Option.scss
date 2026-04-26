@@ -1,0 +1,50 @@
+// @use '@shared/lib/styles/helpers' as *;
+
+// .option {
+//   padding: rem(14);
+//   border-radius: var(--border-radius-m);
+//   transition-duration: var(--transition-duration);
+  
+//   @include hover {
+//     color: var(--color-white);
+//   }
+
+//   &--selected {
+//     color: var(--color-white);
+//   }
+// }
+
+@use '@shared/lib/styles/helpers' as *;
+
+.option {
+  @include fluid-text(16, 14);
+  padding: rem(8);
+  cursor: pointer;
+  transition: all var(--transition-duration);
+  color: var(--color-grey-60);
+  border-radius: var(--border-radius-s);
+
+  &:hover {
+    background-color: var(--color-black-10);
+    color: var(--color-white);
+  }
+
+  &--selected {
+    background-color: var(--color-black-12);
+    color: var(--color-white);
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-red-45);
+      box-shadow: 0 0 8px var(--color-red-45);
+    }
+  }
+}

@@ -1,0 +1,1 @@
+export { default as DeleteCargoFromApplication } from "./ui/DeleteCargoFromApplication";

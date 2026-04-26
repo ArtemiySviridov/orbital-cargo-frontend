@@ -1,0 +1,18 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+
+.tab {
+  @include fluid-text(16, 14);
+
+  color: var(--color-grey-60);
+  padding: rem(8);
+  background-color: inherit;
+
+  border-radius: var(--border-radius-s);
+
+  @include hover {
+    background-color: var(--color-black-12);
+    color: var(--color-white);
+  }
+}
+ 

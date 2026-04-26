@@ -1,0 +1,19 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.flight-logs {
+  flex: 1;
+  border: 3px solid var(--color-black-20);
+  background-color: var(--color-black-08);
+  border-radius: var(--border-radius-m);
+  color: var(--color-green-01);
+  padding: var(10);
+
+  &__title {
+
+  }
+
+  &__logs {
+    overflow-y: auto;
+    
+  }
+}

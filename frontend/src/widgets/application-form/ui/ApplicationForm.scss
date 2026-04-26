@@ -24,3 +24,9 @@
     flex: 1.5;
   }
 }
+
+.form-error {
+  margin-top: rem(6);
+  font-size: rem(13);
+  color: var(--color-red-70);
+}

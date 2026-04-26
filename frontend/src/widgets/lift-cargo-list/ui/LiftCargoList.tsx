@@ -1,82 +1,23 @@
 
 import { CargoCard } from "@/entities/cargo/ui";
+import type { ICargo } from "@/entities/cargo/model/types";
 import { AddCargoToCellButton } from "@/features/add-cargo-to-cell";
 
 import "./LiftCargoList.scss";
 import { EndLiftLoadingButton } from "@/features/end-lift-loading-button";
 import { EmptyState } from "@/shared/ui/empty-state";
 
-const cargoList: any = [
-  {
-    id: "1",
-    name: "Промышленное оборудование",
-    weight: "2500 кг",
-    applicationNumber: "ORD-2024-001",
-    loadingStatus: true
-  },
-  {
-    id: "2",
-    name: "Электроника и компоненты",
-    weight: "850 кг",
-    applicationNumber: "ORD-2024-002",
-    loadingStatus: false
-  },
-  {
-    id: "3",
-    name: "Строительные материалы",
-    weight: "5200 кг",
-    applicationNumber: "ORD-2024-003",
-    loadingStatus: false
-  },
-  {
-    id: "4",
-    name: "Медицинское оборудование",
-    weight: "430 кг",
-    applicationNumber: "ORD-2024-004",
-    loadingStatus: false
-  },
-  {
-    id: "5",
-    name: "Продукты питания",
-    weight: "1800 кг",
-    applicationNumber: "ORD-2024-005",
-    loadingStatus: false
-  },
-  {
-    id: "6",
-    name: "Мебель и интерьер",
-    weight: "920 кг",
-    applicationNumber: "ORD-2024-006",
-    loadingStatus: false
-  },
-  {
-    id: "7",
-    name: "Химические реактивы",
-    weight: "650 кг",
-    applicationNumber: "ORD-2024-007",
-    loadingStatus: false
-  },
-  {
-    id: "8",
-    name: "Запчасти для автомобилей",
-    weight: "1450 кг",
-    applicationNumber: "ORD-2024-008",
-    loadingStatus: false
-  },
-  {
-    id: "9",
-    name: "Текстильные изделия",
-    weight: "780 кг",
-    applicationNumber: "ORD-2024-009",
-    loadingStatus: false
-  },
-  {
-    id: "10",
-    name: "Спортивный инвентарь",
-    weight: "560 кг",
-    applicationNumber: "ORD-2024-010",
-    loadingStatus: false
-  }
+const cargoList: ICargo[] = [
+  { id: "1", name: "Промышленное оборудование", weight: "2500 кг", applicationNumber: "ORD-2024-001" },
+  { id: "2", name: "Электроника и компоненты", weight: "850 кг", applicationNumber: "ORD-2024-002" },
+  { id: "3", name: "Строительные материалы", weight: "5200 кг", applicationNumber: "ORD-2024-003" },
+  { id: "4", name: "Медицинское оборудование", weight: "430 кг", applicationNumber: "ORD-2024-004" },
+  { id: "5", name: "Продукты питания", weight: "1800 кг", applicationNumber: "ORD-2024-005" },
+  { id: "6", name: "Мебель и интерьер", weight: "920 кг", applicationNumber: "ORD-2024-006" },
+  { id: "7", name: "Химические реактивы", weight: "650 кг", applicationNumber: "ORD-2024-007" },
+  { id: "8", name: "Запчасти для автомобилей", weight: "1450 кг", applicationNumber: "ORD-2024-008" },
+  { id: "9", name: "Текстильные изделия", weight: "780 кг", applicationNumber: "ORD-2024-009" },
+  { id: "10", name: "Спортивный инвентарь", weight: "560 кг", applicationNumber: "ORD-2024-010" },
 ];
 
 const LiftCargoList = () => {
@@ -94,7 +35,7 @@ const LiftCargoList = () => {
           <EmptyState text="Выберите ячейку для отображения списка грузов." />
         ) : (
           <>
-          {cargoList.map((cargo: any) => (
+          {cargoList.map((cargo) => (
           <li key={cargo.id}>
             <CargoCard
               type="loading"

@@ -1,5 +1,5 @@
 import { Button } from "@/shared/ui/button";
-import { RotateCcw, Save, Trash2 } from "lucide-react";
+import { Save, Trash2 } from "lucide-react";
 
 import "./ApplicationFormButtons.scss";
 import type { ApplicationFormButtonsProps } from "../model/types";
@@ -7,31 +7,42 @@ import type { ApplicationFormButtonsProps } from "../model/types";
 const ApplicationFormButtons = (props: ApplicationFormButtonsProps) => {
   const {
     type,
+    isLoading,
+    onSave,
+    onDelete,
+    isSaveLoading,
+    isDeleteLoading,
+    canDelete,
   } = props;
 
   const isCreate = type === "create";
 
   return (
     <div className="application-form-buttons">
-      { isCreate ? (
-        <Button text="Создать" variant="primary" />
+      {isCreate ? (
+        <Button
+          text={isLoading ? "Создание…" : "Создать"}
+          variant={isLoading ? "disabled" : "primary"}
+          type="submit"
+        />
       ) : (
         <>
           <Button
-            text="Сохранить"
-            variant="primary"
+            text={isSaveLoading ? "Сохранение…" : "Сохранить"}
+            variant={isSaveLoading ? "disabled" : "primary"}
             icon={<Save size={24} />}
+            type="button"
+            onClick={onSave}
           />
-          <Button
-            text="Отменить изменения"
-            variant="secondary"
-            icon={<RotateCcw size={24} />}
-          />
-          <Button
-            text="Удалить"
-            variant="secondary"
-            icon={<Trash2 size={24} />}
-          />
+          {canDelete && (
+            <Button
+              text={isDeleteLoading ? "Удаление…" : "Удалить заявку"}
+              variant={isDeleteLoading ? "disabled" : "secondary"}
+              icon={<Trash2 size={24} />}
+              type="button"
+              onClick={onDelete}
+            />
+          )}
         </>
       )}
     </div>

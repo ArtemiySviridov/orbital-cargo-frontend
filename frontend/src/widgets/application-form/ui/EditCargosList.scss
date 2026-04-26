@@ -1,0 +1,10 @@
+.edit-cargo-item {
+  &--deleted .cargo-card {
+    opacity: 0.45;
+  }
+
+  &__name--strike {
+    text-decoration: line-through;
+    color: var(--color-grey-60);
+  }
+}

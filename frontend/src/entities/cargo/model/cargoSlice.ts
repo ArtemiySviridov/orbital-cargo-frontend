@@ -1,5 +1,5 @@
 import { createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ICargo } from "./types";
+import type { CargoSize, ICargo } from "./types";
 
 interface CargoState {
   cargos: ICargo[];
@@ -25,12 +25,12 @@ export const cargoSlice = createSlice({
   reducers: {
     addCargo: (state) => {
       if (state.newCargoName.trim() && state.newCargoWeight.trim() && state.newCargoSize.trim()) {
-        const newCargo = {
+        const newCargo: ICargo = {
           id: Date.now().toString(),
           name: state.newCargoName,
           weight: state.newCargoWeight,
-          size: state.newCargoSize,
-          status: "Не отправлен"
+          size: state.newCargoSize as CargoSize,
+          status: "Не отправлен",
         };
 
         state.cargos.push(newCargo);

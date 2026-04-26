@@ -35,4 +35,11 @@
       flex: 0 0 auto; // Кнопка не растягивается
     }
   }
+
+  &__error {
+    display: block;
+    margin-top: rem(4);
+    font-size: rem(12);
+    color: var(--color-red-70);
+  }
 }

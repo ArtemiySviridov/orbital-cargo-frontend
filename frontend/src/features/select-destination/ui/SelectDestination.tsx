@@ -1,10 +1,11 @@
 import { Select } from "@/shared/ui/select";
+import type { OrderDirection } from "@/entities/application";
 
 import "./SelectDestination.scss";
 
 interface SelectDestinationProps {
-  destination: string;
-  setDestination: (value: string) => void;
+  destination: OrderDirection | "";
+  setDestination: (value: OrderDirection) => void;
 }
 
 const SelectDestination = (props: SelectDestinationProps) => {
@@ -13,20 +14,20 @@ const SelectDestination = (props: SelectDestinationProps) => {
     setDestination,
   } = props;
 
-  const liftDestinations = [
-    {title: "На орбиту", value: "01"},
-    {title: "На Землю", value: "02"},
+  const liftDestinations: { title: string; value: OrderDirection }[] = [
+    { title: "На орбиту", value: "to_orbit" },
+    { title: "На Землю", value: "to_earth" },
   ];
 
-  const selectedDestination = liftDestinations.find((item) => item.title === destination);
+  const selectedDestination = liftDestinations.find((item) => item.value === destination);
 
   return (
     <div className="select-destination">
       <h3 className="h3 select-destination__title">Направление доставки</h3>
       <Select
         options={liftDestinations}
-        selected={selectedDestination || null}
-        onChange={(selectedDestination) => setDestination(selectedDestination)}
+        selected={selectedDestination}
+        onChange={(option) => setDestination(option.value as OrderDirection)}
         placeholder="Выберите направление"
       />
     </div>

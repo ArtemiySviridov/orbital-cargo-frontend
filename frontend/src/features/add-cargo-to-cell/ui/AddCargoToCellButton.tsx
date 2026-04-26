@@ -1,4 +1,3 @@
-import { useAppDispatch } from "@/app/store/hooks";
 import { Button } from "@/shared/ui/button";
 import { Plus } from "lucide-react";
 
@@ -7,11 +6,9 @@ interface AddCargoToCellButtonProps {
 }
 
 const AddCargoToCellButton = ({ cargoId }: AddCargoToCellButtonProps) => {
-  const dispatch = useAppDispatch();
-
-  const handleAddCargo = (cargoId: string) => {
-    console.log(cargoId);
-  }
+  const handleAddCargo = (id: string) => {
+    console.log(id);
+  };
 
   return (
     <Button

@@ -73,6 +73,12 @@
     column-gap: rem(20);
     height: calc(100vh - rem(210));
     overflow: hidden;
+    position: relative;
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
   }
 
   &__transit-banner {

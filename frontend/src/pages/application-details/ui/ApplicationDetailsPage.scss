@@ -1,0 +1,18 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.application-details {
+  position: relative;
+
+  &__overlay-loader {
+    position: absolute;
+    inset: rem(100) rem(16) rem(16);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(18, 18, 18, 0.45);
+    backdrop-filter: blur(1px);
+    border-radius: var(--border-radius-m);
+    pointer-events: none;
+  }
+}

@@ -3,17 +3,16 @@ import './Button.scss';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
-  variant: "primary" | "secondary" | "disabled";
+  variant: "primary" | "secondary";
   icon?: ReactNode;
 }
 
-const Button = ({ text, variant="primary", icon, ...props }: ButtonProps) => {
-  const isButtonDisabled = variant === "disabled";
+const Button = ({ text, variant="primary", icon, disabled, className="", ...props }: ButtonProps) => {
   return (
     <button 
-      className={`button button--${variant}`}
+      className={`button button--${variant} ${disabled ? "button--disabled" : ""} ${className}`}
+      disabled={disabled}
       {...props}
-      disabled={isButtonDisabled}
     >
       {icon && <span className="button__icon">{icon}</span>}
       {text && <span className="button__text">{text}</span>}

@@ -42,17 +42,10 @@ export const authApi = createApi({
       },
     }),
     logout: builder.mutation<void, void>({
-      query: () => ({
-        url: "/auth/logout",
-        method: "POST",
-      }),
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled;
-        } finally {
-          dispatch(authActions.logout());
-          dispatch(authApi.util.resetApiState());
-        }
+      async queryFn(_arg, { dispatch }) {
+        dispatch(authActions.logout());
+        dispatch(authApi.util.resetApiState());
+        return { data: undefined };
       },
     }),
   }),

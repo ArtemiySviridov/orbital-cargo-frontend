@@ -74,10 +74,17 @@ const EditCargosList = ({
                     <Button
                       className="edit-cargo-item__action-btn"
                       icon={markedForDelete ? <RotateCcw size={18} /> : <X size={18} />}
-                      variant={cargo.in_elevator ? "disabled" : "primary"}
+                      variant="secondary"
+                      disabled={cargo.in_elevator}
                       type="button"
-                      onClick={cargo.in_elevator ? undefined : () => onToggleDeleteServer(cargo.id)}
-                      title={cargo.in_elevator ? "Груз в лифте" : markedForDelete ? "Восстановить" : "Удалить"}
+                      onClick={() => onToggleDeleteServer(cargo.id)}
+                      title={
+                        cargo.in_elevator
+                          ? "Груз в лифте"
+                          : markedForDelete
+                          ? "Восстановить"
+                          : "Удалить"
+                      }
                     />
                   )}
                 </div>
@@ -99,7 +106,7 @@ const EditCargosList = ({
                     <Button
                       className="edit-cargo-item__action-btn"
                       icon={isDeleted ? <RotateCcw size={18} /> : <X size={18} />}
-                      variant="primary"
+                      variant="secondary"
                       type="button"
                       onClick={() => onToggleDeleteNew(cargo.id)}
                       title={isDeleted ? "Восстановить" : "Удалить"}

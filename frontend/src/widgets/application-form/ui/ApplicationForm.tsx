@@ -210,6 +210,9 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
     const totalCount =
       draftServerCargos.filter((d) => !d.markedForDelete).length +
       newCargos.filter((c) => !deletedNewCargoIds.includes(c.id)).length;
+    const hasChanges =
+      draftServerCargos.some((d) => d.markedForDelete) ||
+      newCargos.some((c) => !deletedNewCargoIds.includes(c.id));
 
     return (
       <>
@@ -224,6 +227,9 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
               setDestination={() => {}}
               disabled
             />
+            {hasChanges && (
+              <span className="create-application-form__unsaved-badge">● Не сохранено</span>
+            )}
             <ApplicationFormButtons
               type="edit"
               onSave={handleSave}

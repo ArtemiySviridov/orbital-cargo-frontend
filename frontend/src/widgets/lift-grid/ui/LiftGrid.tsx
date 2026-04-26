@@ -1,5 +1,7 @@
 import { X } from "lucide-react";
 import type { ICargoOut, ISlotOut } from "@/entities/elevator";
+import { Loader } from "@/shared/ui/loader";
+import { useDelayedVisibility } from "@/shared/lib/hooks/useDelayedVisibility";
 import "./LiftGrid.scss";
 
 interface LiftGridProps {
@@ -9,6 +11,7 @@ interface LiftGridProps {
   onRemoveFromSlot: (slotId: number) => void;
   disabled: boolean;
   isLoading: boolean;
+  isFetching?: boolean;
 }
 
 const SIZE_LABELS: Record<string, string> = { s: "S", m: "M", l: "L" };
@@ -25,9 +28,16 @@ const LiftGrid = ({
   onRemoveFromSlot,
   disabled,
   isLoading,
+  isFetching = false,
 }: LiftGridProps) => {
+  const showOverlayLoader = useDelayedVisibility(isFetching, 200);
+
   if (isLoading) {
-    return <div className="lift-grid lift-grid--loading">Загрузка...</div>;
+    return (
+      <div className="lift-grid lift-grid--loading">
+        <Loader text="Подготавливаем сетку лифта..." />
+      </div>
+    );
   }
 
   const sSlots = slots.filter((s) => s.size === "s");
@@ -89,6 +99,11 @@ const LiftGrid = ({
       {renderSection(SIZE_TITLES.s, "s", sSlots)}
       {renderSection(SIZE_TITLES.m, "m", mSlots)}
       {renderSection(SIZE_TITLES.l, "l", lSlots)}
+      {showOverlayLoader && (
+        <div className="lift-grid__overlay-loader">
+          <Loader size="sm" text="Обновляем сетку..." />
+        </div>
+      )}
     </div>
   );
 };

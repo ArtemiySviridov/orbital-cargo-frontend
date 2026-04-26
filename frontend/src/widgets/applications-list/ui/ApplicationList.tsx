@@ -5,6 +5,8 @@ import { useListManagerOrdersQuery } from "@/entities/elevator";
 import { selectAuth } from "@/entities/auth";
 import { useAppSelector } from "@/app/store/hooks";
 import { EmptyState } from "@/shared/ui/empty-state";
+import { Loader } from "@/shared/ui/loader";
+import { useDelayedVisibility } from "@/shared/lib/hooks/useDelayedVisibility";
 
 import "./ApplicationList.scss";
 
@@ -19,7 +21,8 @@ const ApplicationList = ({ statusFilter }: ApplicationListProps) => {
   const clientResult = useGetOrdersQuery({ status: statusFilter }, { skip: isManager || user === null });
   const managerResult = useListManagerOrdersQuery({ status: statusFilter }, { skip: !isManager || user === null });
 
-  const { data: orders = [], isLoading, isError } = isManager ? managerResult : clientResult;
+  const { data: orders = [], isLoading, isFetching, isError } = isManager ? managerResult : clientResult;
+  const showOverlayLoader = useDelayedVisibility(isFetching && !isLoading, 200);
 
   const isEmpty = orders.length === 0;
 
@@ -27,7 +30,7 @@ const ApplicationList = ({ statusFilter }: ApplicationListProps) => {
     return (
       <div className="application-list section-background">
         <div className="application-list__list-wrapper application-list__list-wrapper--empty">
-          <EmptyState text="Загрузка заявок…" />
+          <Loader text="Загрузка заявок..." />
         </div>
       </div>
     );
@@ -58,6 +61,11 @@ const ApplicationList = ({ statusFilter }: ApplicationListProps) => {
           </ul>
         )}
       </div>
+      {showOverlayLoader && (
+        <div className="application-list__overlay-loader">
+          <Loader size="sm" text="Обновляем список..." />
+        </div>
+      )}
     </div>
   );
 };

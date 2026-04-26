@@ -40,7 +40,7 @@ function computeHasChanges(draft: Map<number, number>, elevator: IElevatorOut): 
 }
 
 const FillLiftPage = () => {
-  const { data: elevator, isLoading: elevatorLoading, refetch: refetchElevator } =
+  const { data: elevator, isLoading: elevatorLoading, isFetching: elevatorFetching, refetch: refetchElevator } =
     useGetElevatorQuery();
 
   const expectedDirection: OrderDirection | undefined = elevator
@@ -54,7 +54,7 @@ const FillLiftPage = () => {
   const [sizeFilter, setSizeFilter] = useState<CargoSize | undefined>(undefined);
   const [draft, setDraft] = useState<Map<number, number>>(new Map());
 
-  const { data: availableCargos = [], isLoading: cargosLoading, refetch: refetchCargos } =
+  const { data: availableCargos = [], isLoading: cargosLoading, isFetching: cargosFetching, refetch: refetchCargos } =
     useGetAvailableCargosQuery(
       { direction: expectedDirection, size: sizeFilter },
       { skip: !expectedDirection },
@@ -180,13 +180,13 @@ const FillLiftPage = () => {
             </div>
             <div className="fill-lift__actions">
               <Button
-                variant={hasChanges && !isDisabled ? "primary" : "disabled"}
+                variant="primary"
                 text={isSaving ? "Сохранение..." : "Сохранить"}
                 onClick={handleSave}
                 disabled={!hasChanges || isDisabled}
               />
               <Button
-                variant={hasChanges && !isInTransit ? "secondary" : "disabled"}
+                variant="secondary"
                 text="Отменить"
                 onClick={handleCancel}
                 disabled={!hasChanges || isInTransit}
@@ -204,25 +204,28 @@ const FillLiftPage = () => {
             Лифт в пути — манифест заморожен
           </div>
         )}
-        <LiftGrid
-          slots={elevator?.slots ?? []}
-          draft={draft}
-          cargosById={cargosById}
-          onRemoveFromSlot={handleRemoveFromSlot}
-          disabled={isDisabled}
-          isLoading={elevatorLoading}
-        />
-        <LiftCargoList
-          cargos={displayedCargos}
-          slots={elevator?.slots ?? []}
-          draft={draft}
-          direction={expectedDirection ?? "to_orbit"}
-          sizeFilter={sizeFilter}
-          onSizeFilterChange={setSizeFilter}
-          onAddToSlot={handleAddToSlot}
-          disabled={isDisabled}
-          isLoading={cargosLoading}
-        />
+          <LiftGrid
+            slots={elevator?.slots ?? []}
+            draft={draft}
+            cargosById={cargosById}
+            onRemoveFromSlot={handleRemoveFromSlot}
+            disabled={isDisabled}
+            isLoading={elevatorLoading}
+            isFetching={elevatorFetching && !elevatorLoading}
+          />
+
+          <LiftCargoList
+            cargos={displayedCargos}
+            slots={elevator?.slots ?? []}
+            draft={draft}
+            direction={expectedDirection ?? "to_orbit"}
+            sizeFilter={sizeFilter}
+            onSizeFilterChange={setSizeFilter}
+            onAddToSlot={handleAddToSlot}
+            disabled={isDisabled}
+            isLoading={cargosLoading}
+            isFetching={cargosFetching && !cargosLoading}
+          />
       </div>
     </div>
   );

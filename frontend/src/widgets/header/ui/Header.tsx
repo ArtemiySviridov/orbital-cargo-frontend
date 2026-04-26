@@ -15,13 +15,8 @@ const Header = () => {
   const isRoleManager = role === "manager";
 
   const handleLogout = async () => {
-    try {
-      await logout().unwrap();
-    } catch {
-      // Even if server logout fails, local auth state is cleared in mutation finally.
-    } finally {
-      navigate("/");
-    }
+    await logout().unwrap();
+    navigate("/");
   };
 
   return (

@@ -3,6 +3,8 @@ import type { ICargoOut, ISlotOut, OrderDirection, CargoSize } from "@/entities/
 import { Select } from "@/shared/ui/select";
 import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/shared/ui/empty-state";
+import { Loader } from "@/shared/ui/loader";
+import { useDelayedVisibility } from "@/shared/lib/hooks/useDelayedVisibility";
 import type { IOption } from "@/shared/ui/select/model/types";
 import "./LiftCargoList.scss";
 
@@ -16,6 +18,7 @@ interface LiftCargoListProps {
   onAddToSlot: (slotId: number, cargoId: number) => void;
   disabled: boolean;
   isLoading: boolean;
+  isFetching?: boolean;
 }
 
 const DIRECTION_LABELS: Record<OrderDirection, string> = {
@@ -80,7 +83,7 @@ const CargoItem = ({ cargo, slots, draft, onAdd, disabled }: CargoItemProps) => 
           disabled={disabled || options.length === 0}
         />
         <Button
-          variant={disabled || !selectedSlot ? "disabled" : "primary"}
+          variant="primary"
           text="Добавить"
           onClick={handleAdd}
           disabled={disabled || !selectedSlot}
@@ -100,7 +103,9 @@ const LiftCargoList = ({
   onAddToSlot,
   disabled,
   isLoading,
+  isFetching = false,
 }: LiftCargoListProps) => {
+  const showOverlayLoader = useDelayedVisibility(isFetching, 200);
   const isEmpty = cargos.length === 0;
 
   return (
@@ -124,7 +129,7 @@ const LiftCargoList = ({
 
       <ul className={`lift-cargo-list__list ${isEmpty ? "lift-cargo-list__list--empty" : ""}`}>
         {isLoading ? (
-          <EmptyState text="Загрузка грузов..." />
+          <Loader text="Загрузка грузов..." />
         ) : isEmpty ? (
           <EmptyState text="Нет доступных грузов для загрузки." />
         ) : (
@@ -140,6 +145,11 @@ const LiftCargoList = ({
           ))
         )}
       </ul>
+      {showOverlayLoader && (
+        <div className="lift-cargo-list__overlay-loader">
+          <Loader size="sm" text="Обновляем грузы..." />
+        </div>
+      )}
     </div>
   );
 };

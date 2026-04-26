@@ -23,6 +23,13 @@
   &__cargos-list {
     flex: 1.5;
   }
+
+  &__unsaved-badge {
+    @include fluid-text(12, 10);
+    color: var(--color-red-70);
+    font-weight: 600;
+    animation: unsaved-pulse 1.5s infinite alternate;
+  }
 }
 
 .form-error {
@@ -40,4 +47,9 @@
       visibility: visible;
     }
   }
+}
+
+@keyframes unsaved-pulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
 }

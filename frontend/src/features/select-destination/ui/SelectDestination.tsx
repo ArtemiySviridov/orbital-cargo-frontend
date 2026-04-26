@@ -6,12 +6,14 @@ import "./SelectDestination.scss";
 interface SelectDestinationProps {
   destination: OrderDirection | "";
   setDestination: (value: OrderDirection) => void;
+  disabled?: boolean;
 }
 
 const SelectDestination = (props: SelectDestinationProps) => {
   const {
     destination,
     setDestination,
+    disabled,
   } = props;
 
   const liftDestinations: { title: string; value: OrderDirection }[] = [
@@ -29,6 +31,7 @@ const SelectDestination = (props: SelectDestinationProps) => {
         selected={selectedDestination}
         onChange={(option) => setDestination(option.value as OrderDirection)}
         placeholder="Выберите направление"
+        disabled={disabled}
       />
     </div>
   );

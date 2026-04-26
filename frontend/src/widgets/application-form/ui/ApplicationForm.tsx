@@ -22,6 +22,10 @@ interface ApplicationFormProps {
   order?: IOrderOut;
 }
 
+type PendingToggle =
+  | { kind: "server"; id: number }
+  | { kind: "new"; id: string };
+
 const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -36,8 +40,12 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
   const [draftServerCargos, setDraftServerCargos] = useState<DraftServerCargo[]>(() =>
     order ? order.cargos.map((c) => ({ cargo: c, markedForDelete: false })) : []
   );
+  const [deletedNewCargoIds, setDeletedNewCargoIds] = useState<string[]>([]);
+
+  // ── modal state ──
   const [showLastCargoModal, setShowLastCargoModal] = useState(false);
-  const [pendingToggleId, setPendingToggleId] = useState<number | null>(null);
+  const [pendingToggle, setPendingToggle] = useState<PendingToggle | null>(null);
+  const [showDeleteOrderModal, setShowDeleteOrderModal] = useState(false);
 
   const [createOrder, { isLoading: isCreating }] = useCreateOrderMutation();
   const [cancelOrder, { isLoading: isCancellingOrder }] = useCancelOrderMutation();
@@ -75,12 +83,20 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
     navigate("/applications");
   };
 
-  // ── edit: toggle delete ──
-  const handleToggleDelete = (cargoId: number) => {
+  // ── edit: shared "last cargo" check ──
+  const activeServerCount = (excludeServerId?: number) =>
+    draftServerCargos.filter(
+      (d) => !d.markedForDelete && d.cargo.id !== excludeServerId
+    ).length;
+
+  const activeNewCount = (excludeNewId?: string) =>
+    newCargos.filter((c) => !deletedNewCargoIds.includes(c.id) && c.id !== excludeNewId).length;
+
+  // ── edit: toggle delete server cargo ──
+  const handleToggleDeleteServer = (cargoId: number) => {
     const draft = draftServerCargos.find((d) => d.cargo.id === cargoId);
     if (!draft) return;
 
-    // Если груз уже помечен — просто восстанавливаем
     if (draft.markedForDelete) {
       setDraftServerCargos((prev) =>
         prev.map((d) => (d.cargo.id === cargoId ? { ...d, markedForDelete: false } : d))
@@ -88,13 +104,8 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
       return;
     }
 
-    // Проверяем: будет ли это последний активный груз?
-    const activeAfter =
-      draftServerCargos.filter((d) => !d.markedForDelete && d.cargo.id !== cargoId).length +
-      newCargos.length;
-
-    if (activeAfter === 0) {
-      setPendingToggleId(cargoId);
+    if (activeServerCount(cargoId) + activeNewCount() === 0) {
+      setPendingToggle({ kind: "server", id: cargoId });
       setShowLastCargoModal(true);
     } else {
       setDraftServerCargos((prev) =>
@@ -103,14 +114,33 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
     }
   };
 
+  // ── edit: toggle delete new cargo ──
+  const handleToggleDeleteNew = (localId: string) => {
+    if (deletedNewCargoIds.includes(localId)) {
+      setDeletedNewCargoIds((prev) => prev.filter((id) => id !== localId));
+      return;
+    }
+
+    if (activeServerCount() + activeNewCount(localId) === 0) {
+      setPendingToggle({ kind: "new", id: localId });
+      setShowLastCargoModal(true);
+    } else {
+      setDeletedNewCargoIds((prev) => [...prev, localId]);
+    }
+  };
+
   const confirmLastCargoDelete = () => {
-    if (pendingToggleId !== null) {
+    if (pendingToggle?.kind === "server") {
       setDraftServerCargos((prev) =>
-        prev.map((d) => (d.cargo.id === pendingToggleId ? { ...d, markedForDelete: true } : d))
+        prev.map((d) =>
+          d.cargo.id === pendingToggle.id ? { ...d, markedForDelete: true } : d
+        )
       );
+    } else if (pendingToggle?.kind === "new") {
+      setDeletedNewCargoIds((prev) => [...prev, pendingToggle.id]);
     }
     setShowLastCargoModal(false);
-    setPendingToggleId(null);
+    setPendingToggle(null);
   };
 
   // ── edit: reset ──
@@ -118,6 +148,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
     if (!order) return;
     setDraftServerCargos(order.cargos.map((c) => ({ cargo: c, markedForDelete: false })));
     dispatch(cargoActions.deleteAllCargos());
+    setDeletedNewCargoIds([]);
   };
 
   // ── edit: save ──
@@ -125,16 +156,16 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
     if (!order) return;
 
     const activeDraft = draftServerCargos.filter((d) => !d.markedForDelete);
-    const totalActive = activeDraft.length + newCargos.length;
+    const activeNew = newCargos.filter((c) => !deletedNewCargoIds.includes(c.id));
+    const totalActive = activeDraft.length + activeNew.length;
 
-    // Если всё помечено на удаление — отменяем заявку
     if (totalActive === 0) {
       await cancelOrder(order.id).unwrap();
       navigate("/applications");
       return;
     }
 
-    await saveOrderCargos({
+    const savedOrder = await saveOrderCargos({
       orderId: order.id,
       body: {
         cargos: [
@@ -144,7 +175,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
             weight_kg: d.cargo.weight_kg,
             size: d.cargo.size,
           })),
-          ...newCargos.map((c) => ({
+          ...activeNew.map((c) => ({
             name: c.name,
             weight_kg: parseFloat(c.weight),
             size: c.size as CargoSize,
@@ -153,25 +184,31 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
       },
     }).unwrap();
 
+    setDraftServerCargos(savedOrder.cargos.map((c) => ({ cargo: c, markedForDelete: false })));
     dispatch(cargoActions.deleteAllCargos());
+    setDeletedNewCargoIds([]);
   };
 
   // ── edit: delete order ──
-  const handleDeleteOrder = async () => {
+  const handleDeleteOrder = () => setShowDeleteOrderModal(true);
+
+  const confirmDeleteOrder = async () => {
     if (!order) return;
+    setShowDeleteOrderModal(false);
     await cancelOrder(order.id).unwrap();
     navigate("/applications");
   };
 
-  // ── computed ──
+  // ── edit mode render ──
   if (type === "edit" && order) {
     const canAddCargos = order.status !== "in_progress";
     const canDeleteOrder =
       order.status !== "cancelled" &&
       order.cargos.every((c) => c.status !== "in_transit");
 
-    const activeDraftCount = draftServerCargos.filter((d) => !d.markedForDelete).length;
-    const totalCount = activeDraftCount + newCargos.length;
+    const totalCount =
+      draftServerCargos.filter((d) => !d.markedForDelete).length +
+      newCargos.filter((c) => !deletedNewCargoIds.includes(c.id)).length;
 
     return (
       <>
@@ -184,6 +221,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
             <SelectDestination
               destination={order.direction}
               setDestination={() => {}}
+              disabled
             />
             <ApplicationFormButtons
               type="edit"
@@ -198,8 +236,10 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
             <EditCargosList
               draftServerCargos={draftServerCargos}
               newCargos={newCargos}
+              deletedNewCargoIds={deletedNewCargoIds}
               totalCount={totalCount}
-              onToggleDelete={handleToggleDelete}
+              onToggleDeleteServer={handleToggleDeleteServer}
+              onToggleDeleteNew={handleToggleDeleteNew}
               onReset={handleReset}
             />
           </section>
@@ -214,8 +254,18 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
           onConfirm={confirmLastCargoDelete}
           onCancel={() => {
             setShowLastCargoModal(false);
-            setPendingToggleId(null);
+            setPendingToggle(null);
           }}
+        />
+
+        <Modal
+          isOpen={showDeleteOrderModal}
+          title="Удаление заявки"
+          message="Заявка будет полностью отменена. Это действие нельзя отменить. Продолжить?"
+          confirmText="Удалить"
+          cancelText="Отмена"
+          onConfirm={confirmDeleteOrder}
+          onCancel={() => setShowDeleteOrderModal(false)}
         />
       </>
     );
@@ -238,8 +288,10 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
         <ApplicationFormButtons type="create" isLoading={isCreating} />
       </section>
       <section className="create-application-form__cargos-list">
+        <p className="form-error form-error--reserved" aria-hidden={!cargosError}>
+          {cargosError}
+        </p>
         <CargosList />
-        {cargosError && <p className="form-error">{cargosError}</p>}
       </section>
     </form>
   );

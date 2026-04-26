@@ -6,6 +6,8 @@
   display: flex;
   flex-direction: column;
   row-gap: rem(4);
+  width: 100%;
+  min-width: rem(140);
 
   color: var(--color-grey-60);
 }
@@ -44,11 +46,20 @@
 
   &__placeholder {
     width: 100%;
+    min-width: 0;
     color: var(--color-grey-60);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &[data-selected="true"] {
       color: var(--color-white);
     }
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 }
 

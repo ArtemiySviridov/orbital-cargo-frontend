@@ -29,4 +29,15 @@
   margin-top: rem(6);
   font-size: rem(13);
   color: var(--color-red-70);
+
+  &--reserved {
+    min-height: rem(20);
+    margin-top: 0;
+    margin-bottom: rem(6);
+    visibility: hidden;
+
+    &[aria-hidden="false"] {
+      visibility: visible;
+    }
+  }
 }

@@ -19,6 +19,7 @@ const Select = ({
   label,
   onChange,
   onClose,
+  disabled = false,
 }: SelectProps) => {
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
@@ -73,6 +74,7 @@ const Select = ({
   };
 
   const handleSelectClick: MouseEventHandler<HTMLDivElement> = () => {
+    if (disabled) return;
     setIsOpen((prev) => !prev);
   };
 
@@ -82,7 +84,7 @@ const Select = ({
 
       <div
         id={selectId}
-        className="select"
+        className={`select${disabled ? " select--disabled" : ""}`}
         ref={rootRef}
         data-is-active={isOpen}
         onClick={handleSelectClick}
@@ -94,7 +96,8 @@ const Select = ({
         <div
           className="select__placeholder"
           data-selected={!!selected}
-          tabIndex={0}
+          tabIndex={disabled ? -1 : 0}
+          aria-disabled={disabled}
         >
           {selected?.title || placeholder}
         </div>

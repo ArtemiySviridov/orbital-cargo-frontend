@@ -29,6 +29,7 @@ export interface SelectProps {
   label?: string;
   onChange?: (option: IOption) => void;
   onClose?: () => void;
+  disabled?: boolean;
 }
 
 export interface OptionProps {

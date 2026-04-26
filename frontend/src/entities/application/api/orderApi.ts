@@ -1,14 +1,14 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "@/shared/api/axiosBaseQuery";
-import type { IOrderCreate, IOrderListItem, IOrderOut, ICargosSaveRequest } from "../model/types";
+import type { IOrderCreate, IOrderListItem, IOrderOut, ICargosSaveRequest, OrderStatus } from "../model/types";
 
 export const orderApi = createApi({
   reducerPath: "orderApi",
   baseQuery: axiosBaseQuery(),
   tagTypes: ["Orders"],
   endpoints: (builder) => ({
-    getOrders: builder.query<IOrderListItem[], void>({
-      query: () => ({ url: "/orders" }),
+    getOrders: builder.query<IOrderListItem[], { status?: OrderStatus }>({
+      query: ({ status } = {}) => ({ url: "/orders", params: { status } }),
       providesTags: ["Orders"],
     }),
     createOrder: builder.mutation<IOrderOut, IOrderCreate>({

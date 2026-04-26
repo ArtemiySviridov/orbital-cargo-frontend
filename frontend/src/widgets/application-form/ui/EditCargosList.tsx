@@ -64,6 +64,9 @@ const EditCargosList = ({
                       {cargo.name}
                     </span>
                     <span>{CARGO_STATUS_LABELS[cargo.status]}</span>
+                    {cargo.in_elevator && (
+                      <span className="edit-cargo-item__elevator-badge">В лифте</span>
+                    )}
                   </div>
                   <span>{cargo.weight_kg} кг</span>
                   <span>{cargo.size.toUpperCase()}</span>
@@ -71,10 +74,10 @@ const EditCargosList = ({
                     <Button
                       className="edit-cargo-item__action-btn"
                       icon={markedForDelete ? <RotateCcw size={18} /> : <X size={18} />}
-                      variant="secondary"
+                      variant={cargo.in_elevator ? "disabled" : "primary"}
                       type="button"
-                      onClick={() => onToggleDeleteServer(cargo.id)}
-                      title={markedForDelete ? "Восстановить" : "Удалить"}
+                      onClick={cargo.in_elevator ? undefined : () => onToggleDeleteServer(cargo.id)}
+                      title={cargo.in_elevator ? "Груз в лифте" : markedForDelete ? "Восстановить" : "Удалить"}
                     />
                   )}
                 </div>
@@ -96,7 +99,7 @@ const EditCargosList = ({
                     <Button
                       className="edit-cargo-item__action-btn"
                       icon={isDeleted ? <RotateCcw size={18} /> : <X size={18} />}
-                      variant="secondary"
+                      variant="primary"
                       type="button"
                       onClick={() => onToggleDeleteNew(cargo.id)}
                       title={isDeleted ? "Восстановить" : "Удалить"}

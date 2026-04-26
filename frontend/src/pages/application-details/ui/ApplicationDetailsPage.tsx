@@ -2,15 +2,26 @@ import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 import { ApplicationForm } from "@/widgets/application-form";
 import { useGetOrderByIdQuery } from "@/entities/application";
+import type { IOrderOut } from "@/entities/application";
+import { useGetManagerOrderQuery } from "@/entities/elevator";
+import { selectAuth } from "@/entities/auth";
+import { useAppSelector } from "@/app/store/hooks";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
+import ManagerOrderView from "./ManagerOrderView";
 
 const ApplicationDetailsPage = () => {
   const { applicationId } = useParams();
   const navigate = useNavigate();
   const orderId = Number(applicationId);
 
-  const { data: order, isLoading, isError } = useGetOrderByIdQuery(orderId);
+  const { user } = useAppSelector(selectAuth);
+  const isManager = user?.role === "manager";
+
+  const clientQuery = useGetOrderByIdQuery(orderId, { skip: isManager || user === null });
+  const managerQuery = useGetManagerOrderQuery(orderId, { skip: !isManager || user === null });
+
+  const { data: order, isLoading, isError } = isManager ? managerQuery : clientQuery;
 
   return (
     <div className="application-details container">
@@ -20,7 +31,10 @@ const ApplicationDetailsPage = () => {
 
       {isLoading && <p>Загрузка…</p>}
       {isError && <p>Не удалось загрузить заявку.</p>}
-      {order && <ApplicationForm type="edit" order={order} />}
+      {order && (isManager
+        ? <ManagerOrderView order={order} />
+        : <ApplicationForm type="edit" order={order as IOrderOut} />
+      )}
     </div>
   );
 };

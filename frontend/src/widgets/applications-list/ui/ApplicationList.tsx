@@ -1,11 +1,25 @@
 import { ApplicationCard } from "@/entities/application";
 import { useGetOrdersQuery } from "@/entities/application";
+import type { OrderStatus } from "@/entities/application";
+import { useListManagerOrdersQuery } from "@/entities/elevator";
+import { selectAuth } from "@/entities/auth";
+import { useAppSelector } from "@/app/store/hooks";
 import { EmptyState } from "@/shared/ui/empty-state";
 
 import "./ApplicationList.scss";
 
-const ApplicationList = () => {
-  const { data: orders = [], isLoading, isError } = useGetOrdersQuery();
+interface ApplicationListProps {
+  statusFilter?: OrderStatus;
+}
+
+const ApplicationList = ({ statusFilter }: ApplicationListProps) => {
+  const { user } = useAppSelector(selectAuth);
+  const isManager = user?.role === "manager";
+
+  const clientResult = useGetOrdersQuery({ status: statusFilter }, { skip: isManager || user === null });
+  const managerResult = useListManagerOrdersQuery({ status: statusFilter }, { skip: !isManager || user === null });
+
+  const { data: orders = [], isLoading, isError } = isManager ? managerResult : clientResult;
 
   const isEmpty = orders.length === 0;
 

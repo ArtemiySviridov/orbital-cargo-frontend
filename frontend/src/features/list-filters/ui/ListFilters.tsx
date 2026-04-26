@@ -1,26 +1,32 @@
 import { Select } from "@/shared/ui/select";
-import { useState } from "react";
+import type { OrderStatus } from "@/entities/application";
 
 import "./ListFilters.scss";
 
-const ListFilters = () => {
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+const STATUS_OPTIONS = [
+  { title: "Все", value: "" },
+  { title: "Создана", value: "created" },
+  { title: "В доставке", value: "in_progress" },
+  { title: "Доставлена", value: "delivered" },
+  { title: "Отменена", value: "cancelled" },
+];
 
-  const statusFilterOptions = [
-    {title: "В доставке", value: "01"},
-    {title: "Не в доставке", value: "02"},
-  ];
+interface ListFiltersProps {
+  status: OrderStatus | undefined;
+  onStatusChange: (status: OrderStatus | undefined) => void;
+}
 
-  const selectedStatusFilter = statusFilterOptions.find((item) => item.value === statusFilter);
+const ListFilters = ({ status, onStatusChange }: ListFiltersProps) => {
+  const selected = STATUS_OPTIONS.find((o) => o.value === (status ?? ""));
 
   return (
     <div className="list-filters">
       <span>Фильтры:</span>
       <Select
-        options={statusFilterOptions}
-        selected={selectedStatusFilter}
+        options={STATUS_OPTIONS}
+        selected={selected}
         placeholder="Статус"
-        onChange={(option) => setStatusFilter(option.value)}
+        onChange={(option) => onStatusChange(option.value ? (option.value as OrderStatus) : undefined)}
       />
     </div>
   );

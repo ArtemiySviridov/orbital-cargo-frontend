@@ -204,7 +204,8 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
     const canAddCargos = order.status !== "in_progress";
     const canDeleteOrder =
       order.status !== "cancelled" &&
-      order.cargos.every((c) => c.status !== "in_transit");
+      order.cargos.every((c) => c.status !== "in_transit") &&
+      order.cargos.every((c) => !c.in_elevator);
 
     const totalCount =
       draftServerCargos.filter((d) => !d.markedForDelete).length +

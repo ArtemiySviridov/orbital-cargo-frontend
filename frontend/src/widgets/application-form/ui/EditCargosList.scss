@@ -7,4 +7,11 @@
     text-decoration: line-through;
     color: var(--color-grey-60);
   }
+
+  &__elevator-badge {
+    font-size: 11px;
+    color: var(--color-orange-01);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
 }

@@ -6,12 +6,15 @@ import type {
   ICargoOut,
   OrderDirection,
   CargoSize,
+  IManagerOrderListItem,
+  IManagerOrderOut,
+  OrderStatus,
 } from "../model/types";
 
 export const elevatorApi = createApi({
   reducerPath: "elevatorApi",
   baseQuery: axiosBaseQuery(),
-  tagTypes: ["Elevator", "AvailableCargos"],
+  tagTypes: ["Elevator", "AvailableCargos", "ManagerOrders"],
   endpoints: (builder) => ({
     getElevator: builder.query<IElevatorOut, void>({
       query: () => ({ url: "/manager/elevator" }),
@@ -35,6 +38,17 @@ export const elevatorApi = createApi({
       }),
       invalidatesTags: ["Elevator", "AvailableCargos"],
     }),
+    listManagerOrders: builder.query<IManagerOrderListItem[], { status?: OrderStatus }>({
+      query: ({ status } = {}) => ({
+        url: "/manager/orders",
+        params: { status },
+      }),
+      providesTags: ["ManagerOrders"],
+    }),
+    getManagerOrder: builder.query<IManagerOrderOut, number>({
+      query: (id) => ({ url: `/manager/orders/${id}` }),
+      providesTags: (_result, _error, id) => [{ type: "ManagerOrders", id }],
+    }),
   }),
 });
 
@@ -42,4 +56,6 @@ export const {
   useGetElevatorQuery,
   useGetAvailableCargosQuery,
   useSaveLoadoutMutation,
+  useListManagerOrdersQuery,
+  useGetManagerOrderQuery,
 } = elevatorApi;

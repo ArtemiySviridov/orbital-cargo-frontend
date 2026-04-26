@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ICargoOut, ISlotOut, OrderDirection } from "@/entities/elevator";
+import type { ICargoOut, ISlotOut, OrderDirection, CargoSize } from "@/entities/elevator";
 import { Select } from "@/shared/ui/select";
 import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/shared/ui/empty-state";
@@ -11,6 +11,8 @@ interface LiftCargoListProps {
   slots: ISlotOut[];
   draft: Map<number, number>;
   direction: OrderDirection;
+  sizeFilter: CargoSize | undefined;
+  onSizeFilterChange: (size: CargoSize | undefined) => void;
   onAddToSlot: (slotId: number, cargoId: number) => void;
   disabled: boolean;
   isLoading: boolean;
@@ -22,6 +24,12 @@ const DIRECTION_LABELS: Record<OrderDirection, string> = {
 };
 
 const SIZE_LABELS: Record<string, string> = { s: "S", m: "M", l: "L" };
+const SIZE_FILTERS: Array<{ label: string; value: CargoSize | undefined }> = [
+  { label: "Все", value: undefined },
+  { label: "S", value: "s" },
+  { label: "M", value: "m" },
+  { label: "L", value: "l" },
+];
 
 interface CargoItemProps {
   cargo: ICargoOut;
@@ -52,7 +60,10 @@ const CargoItem = ({ cargo, slots, draft, onAdd, disabled }: CargoItemProps) => 
   return (
     <li className="cargo-item">
       <div className="cargo-item__header">
-        <span className="cargo-item__name">{cargo.name}</span>
+        <div className="cargo-item__title-row">
+          <span className="cargo-item__name">{cargo.name}</span>
+          <span className="cargo-item__order-id">#{cargo.order_id}</span>
+        </div>
         <div className="cargo-item__badges">
           <span className={`cargo-size-badge cargo-size-badge--${cargo.size}`}>
             {SIZE_LABELS[cargo.size]}
@@ -84,6 +95,8 @@ const LiftCargoList = ({
   slots,
   draft,
   direction,
+  sizeFilter,
+  onSizeFilterChange,
   onAddToSlot,
   disabled,
   isLoading,
@@ -95,6 +108,18 @@ const LiftCargoList = ({
       <div className="lift-cargo-list__header">
         <h3 className="h3 lift-cargo-list__title">Доступные грузы</h3>
         <span className="lift-cargo-list__direction">{DIRECTION_LABELS[direction]}</span>
+      </div>
+
+      <div className="lift-cargo-list__filters">
+        {SIZE_FILTERS.map((f) => (
+          <button
+            key={String(f.value)}
+            className={`size-filter-btn ${sizeFilter === f.value ? "size-filter-btn--active" : ""}`}
+            onClick={() => onSizeFilterChange(f.value)}
+          >
+            {f.label}
+          </button>
+        ))}
       </div>
 
       <ul className={`lift-cargo-list__list ${isEmpty ? "lift-cargo-list__list--empty" : ""}`}>

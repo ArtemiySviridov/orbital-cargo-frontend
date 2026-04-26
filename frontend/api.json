@@ -621,6 +621,111 @@
           }
         }
       }
+    },
+    "/manager/orders": {
+      "get": {
+        "tags": [
+          "manager"
+        ],
+        "summary": "List All Orders",
+        "operationId": "list_all_orders_manager_orders_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/OrderStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderListItem"
+                  },
+                  "title": "Response List All Orders Manager Orders Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/manager/orders/{order_id}": {
+      "get": {
+        "tags": [
+          "manager"
+        ],
+        "summary": "Get One Order",
+        "operationId": "get_one_order_manager_orders__order_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -656,6 +761,10 @@
             "type": "integer",
             "title": "Id"
           },
+          "order_id": {
+            "type": "integer",
+            "title": "Order Id"
+          },
           "name": {
             "type": "string",
             "title": "Name"
@@ -669,6 +778,11 @@
           },
           "status": {
             "$ref": "#/components/schemas/CargoStatus"
+          },
+          "in_elevator": {
+            "type": "boolean",
+            "title": "In Elevator",
+            "default": false
           },
           "created_at": {
             "type": "string",
@@ -684,6 +798,7 @@
         "type": "object",
         "required": [
           "id",
+          "order_id",
           "name",
           "weight_kg",
           "size",

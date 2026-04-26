@@ -33,6 +33,12 @@
     flex-shrink: 0;
   }
 
+  &__filters {
+    display: flex;
+    gap: rem(6);
+    flex-shrink: 0;
+  }
+
   &__list {
     flex: 1;
     display: flex;
@@ -74,12 +80,26 @@
     gap: rem(8);
   }
 
+  &__title-row {
+    display: flex;
+    align-items: baseline;
+    gap: rem(6);
+    min-width: 0;
+  }
+
   &__name {
     @include fluid-text(14, 12);
     color: var(--color-white);
     font-weight: 600;
     min-width: 0;
     word-break: break-word;
+  }
+
+  &__order-id {
+    @include fluid-text(11, 10);
+    color: var(--color-red-70);
+    font-weight: 600;
+    flex-shrink: 0;
   }
 
   &__badges {
@@ -109,6 +129,29 @@
       flex-shrink: 0;
       padding: rem(8) rem(12);
     }
+  }
+}
+
+.size-filter-btn {
+  @include fluid-text(12, 11);
+  padding: rem(4) rem(10);
+  border-radius: var(--border-radius-s);
+  border: 1px solid var(--color-black-20);
+  background-color: var(--color-black-15);
+  color: var(--color-grey-60);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+
+  @include hover {
+    border-color: var(--color-black-30);
+    color: var(--color-white);
+  }
+
+  &--active {
+    background-color: var(--color-red-90);
+    border-color: var(--color-red-90);
+    color: var(--color-white);
   }
 }
 

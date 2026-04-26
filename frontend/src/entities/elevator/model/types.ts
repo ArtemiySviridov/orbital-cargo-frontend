@@ -3,14 +3,30 @@ export type CargoSize = "s" | "m" | "l";
 export type CargoStatus = "pending" | "in_transit" | "delivered" | "cancelled";
 export type OrderDirection = "to_orbit" | "to_earth";
 
+export type OrderStatus = "created" | "in_progress" | "delivered" | "cancelled";
+
 export interface ICargoOut {
   id: number;
+  order_id: number;
   name: string;
   weight_kg: number;
   size: CargoSize;
   status: CargoStatus;
+  in_elevator: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface IManagerOrderListItem {
+  id: number;
+  direction: OrderDirection;
+  status: OrderStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IManagerOrderOut extends IManagerOrderListItem {
+  cargos: ICargoOut[];
 }
 
 export interface ISlotOut {

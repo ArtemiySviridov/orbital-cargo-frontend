@@ -46,18 +46,24 @@ const LiftGrid = ({
       >
         {isOccupied ? (
           <>
+            <div className="slot-card__top">
+              <span className="slot-card__slot-num">Слот #{slot.id}</span>
+              <button
+                className="slot-card__remove-btn"
+                onClick={() => onRemoveFromSlot(slot.id)}
+                disabled={disabled}
+                title="Убрать груз"
+              >
+                <X size={14} />
+              </button>
+            </div>
             <div className="slot-card__cargo-info">
               <span className="slot-card__cargo-name">{cargo!.name}</span>
-              <span className="slot-card__cargo-weight">{cargo!.weight_kg} кг</span>
+              <div className="slot-card__cargo-meta">
+                <span className="slot-card__cargo-weight">{cargo!.weight_kg} кг</span>
+                <span className="slot-card__order-id">#{cargo!.order_id}</span>
+              </div>
             </div>
-            <button
-              className="slot-card__remove-btn"
-              onClick={() => onRemoveFromSlot(slot.id)}
-              disabled={disabled}
-              title="Убрать груз"
-            >
-              <X size={14} />
-            </button>
           </>
         ) : (
           <>

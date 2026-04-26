@@ -8,7 +8,7 @@ import {
   useGetAvailableCargosQuery,
   useSaveLoadoutMutation,
 } from "@/entities/elevator";
-import type { ICargoOut, IElevatorOut, OrderDirection } from "@/entities/elevator";
+import type { ICargoOut, IElevatorOut, OrderDirection, CargoSize } from "@/entities/elevator";
 import "./FillLiftPage.scss";
 
 const LOCATION_LABELS: Record<string, string> = {
@@ -51,15 +51,16 @@ const FillLiftPage = () => {
       : undefined
     : undefined;
 
+  const [sizeFilter, setSizeFilter] = useState<CargoSize | undefined>(undefined);
+  const [draft, setDraft] = useState<Map<number, number>>(new Map());
+
   const { data: availableCargos = [], isLoading: cargosLoading, refetch: refetchCargos } =
     useGetAvailableCargosQuery(
-      { direction: expectedDirection },
+      { direction: expectedDirection, size: sizeFilter },
       { skip: !expectedDirection },
     );
 
   const [saveLoadout, { isLoading: isSaving }] = useSaveLoadoutMutation();
-
-  const [draft, setDraft] = useState<Map<number, number>>(new Map());
   const [error, setError] = useState<string | null>(null);
   const draftInitialized = useRef(false);
 
@@ -216,6 +217,8 @@ const FillLiftPage = () => {
           slots={elevator?.slots ?? []}
           draft={draft}
           direction={expectedDirection ?? "to_orbit"}
+          sizeFilter={sizeFilter}
+          onSizeFilterChange={setSizeFilter}
           onAddToSlot={handleAddToSlot}
           disabled={isDisabled}
           isLoading={cargosLoading}

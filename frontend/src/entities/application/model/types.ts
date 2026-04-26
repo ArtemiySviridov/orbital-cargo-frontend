@@ -15,6 +15,7 @@ export interface ICargoOut {
   weight_kg: number;
   size: CargoSize;
   status: CargoStatus;
+  in_elevator: boolean;
   created_at: string;
   updated_at: string;
 }

@@ -2,27 +2,144 @@
 
 .lift-grid {
   width: 60%;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  gap: 12px;
-
-  grid-auto-flow: dense;
-
+  display: flex;
+  flex-direction: column;
+  gap: rem(16);
+  overflow-y: auto;
   padding: rem(20);
+  scrollbar-gutter: stable;
 
   background-color: var(--color-black-10);
   border: 1px solid var(--color-black-15);
   border-radius: var(--border-radius-m);
 
-  z-index: 1;
+  &--loading {
+    align-items: center;
+    justify-content: center;
+    color: var(--color-grey-60);
+  }
 
-  @include tablet {
-   &__content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8);
+  }
+
+  &__section-title {
+    @include fluid-text(12, 10);
+    color: var(--color-grey-60);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__cells {
+    display: grid;
+    gap: rem(8);
+
+    &--s {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    &--m {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--l {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+.slot-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: rem(6);
+  padding: rem(10);
+
+  border-radius: var(--border-radius-m);
+  border: 1px solid var(--color-black-20);
+  background-color: var(--color-black-15);
+  transition: all 0.2s;
+
+  position: relative;
+  overflow: hidden;
+
+  &--s {
+    min-height: rem(80);
+  }
+
+  &--m {
+    min-height: rem(80);
+  }
+
+  &--l {
+    min-height: rem(160);
+  }
+
+  &--occupied {
+    border-color: var(--color-red-90);
+    background-color: var(--color-black-12);
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: rem(12);
+  }
+
+  &__size-badge {
+    @include fluid-text(16, 14);
+    font-weight: 700;
+    color: var(--color-grey-60);
+  }
+
+  &__slot-num {
+    @include fluid-text(11, 10);
+    color: var(--color-black-30);
+  }
+
+  &__cargo-info {
+    display: flex;
+    flex-direction: column;
+    gap: rem(4);
+    min-width: 0;
+  }
+
+  &__cargo-name {
+    @include fluid-text(13, 11);
+    color: var(--color-white);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__cargo-weight {
+    @include fluid-text(11, 10);
+    color: var(--color-grey-60);
+  }
+
+  &__remove-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: rem(24);
+    height: rem(24);
+    border-radius: var(--border-radius-s);
+    color: var(--color-grey-60);
+    transition: all 0.2s;
+    align-self: flex-start;
+
+    @include hover {
+      background-color: var(--color-red-90);
+      color: var(--color-white);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 }

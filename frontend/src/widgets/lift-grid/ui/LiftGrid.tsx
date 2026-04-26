@@ -1,19 +1,88 @@
-
-import { cells } from "@/entities/lift-cell/model/types";
+import { X } from "lucide-react";
+import type { ICargoOut, ISlotOut } from "@/entities/elevator";
 import "./LiftGrid.scss";
-import LiftCell from "@/entities/lift-cell/ui/LiftCell";
 
-const LiftGrid = () => {
+interface LiftGridProps {
+  slots: ISlotOut[];
+  draft: Map<number, number>;
+  cargosById: Map<number, ICargoOut>;
+  onRemoveFromSlot: (slotId: number) => void;
+  disabled: boolean;
+  isLoading: boolean;
+}
+
+const SIZE_LABELS: Record<string, string> = { s: "S", m: "M", l: "L" };
+const SIZE_TITLES: Record<string, string> = {
+  s: "Малые ячейки (S)",
+  m: "Средние ячейки (M)",
+  l: "Большие ячейки (L)",
+};
+
+const LiftGrid = ({
+  slots,
+  draft,
+  cargosById,
+  onRemoveFromSlot,
+  disabled,
+  isLoading,
+}: LiftGridProps) => {
+  if (isLoading) {
+    return <div className="lift-grid lift-grid--loading">Загрузка...</div>;
+  }
+
+  const sSlots = slots.filter((s) => s.size === "s");
+  const mSlots = slots.filter((s) => s.size === "m");
+  const lSlots = slots.filter((s) => s.size === "l");
+
+  const renderSlot = (slot: ISlotOut) => {
+    const cargoId = draft.get(slot.id);
+    const cargo = cargoId != null ? cargosById.get(cargoId) : null;
+    const isOccupied = cargo != null;
+
+    return (
+      <div
+        key={slot.id}
+        className={`slot-card slot-card--${slot.size} ${isOccupied ? "slot-card--occupied" : ""}`}
+      >
+        {isOccupied ? (
+          <>
+            <div className="slot-card__cargo-info">
+              <span className="slot-card__cargo-name">{cargo!.name}</span>
+              <span className="slot-card__cargo-weight">{cargo!.weight_kg} кг</span>
+            </div>
+            <button
+              className="slot-card__remove-btn"
+              onClick={() => onRemoveFromSlot(slot.id)}
+              disabled={disabled}
+              title="Убрать груз"
+            >
+              <X size={14} />
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="slot-card__size-badge">{SIZE_LABELS[slot.size]}</span>
+            <span className="slot-card__slot-num">Слот #{slot.id}</span>
+          </>
+        )}
+      </div>
+    );
+  };
+
+  const renderSection = (title: string, sizeKey: string, sectionSlots: ISlotOut[]) => (
+    <div className="lift-grid__section" key={sizeKey}>
+      <span className="lift-grid__section-title">{title}</span>
+      <div className={`lift-grid__cells lift-grid__cells--${sizeKey}`}>
+        {sectionSlots.map(renderSlot)}
+      </div>
+    </div>
+  );
+
   return (
     <div className="lift-grid">
-      {cells.map((cell) => (
-        <LiftCell
-          key={cell.id}
-          id={cell.id}
-          size={cell.size}
-          style={cell.style}
-        />
-      ))}
+      {renderSection(SIZE_TITLES.s, "s", sSlots)}
+      {renderSection(SIZE_TITLES.m, "m", mSlots)}
+      {renderSection(SIZE_TITLES.l, "l", lSlots)}
     </div>
   );
 };

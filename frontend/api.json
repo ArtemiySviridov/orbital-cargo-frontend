@@ -224,49 +224,26 @@
       }
     },
     "/orders": {
-      "get": {
-        "tags": [
-          "orders"
-        ],
-        "summary": "List My",
-        "operationId": "list_my_orders_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/OrderListItem"
-                  },
-                  "type": "array",
-                  "title": "Response List My Orders Get"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
-      },
       "post": {
         "tags": [
           "orders"
         ],
         "summary": "Create",
         "operationId": "create_orders_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/OrderCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -289,12 +266,63 @@
               }
             }
           }
-        },
+        }
+      },
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "List My",
+        "operationId": "list_my_orders_get",
         "security": [
           {
             "HTTPBearer": []
           }
-        ]
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/OrderStatusFilter"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderListItem"
+                  },
+                  "title": "Response List My Orders Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/orders/{order_id}": {
@@ -431,6 +459,152 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OrderOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/manager/elevator": {
+      "get": {
+        "tags": [
+          "manager"
+        ],
+        "summary": "Get Elevator",
+        "operationId": "get_elevator_manager_elevator_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElevatorOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/manager/elevator/loadout": {
+      "put": {
+        "tags": [
+          "manager"
+        ],
+        "summary": "Save Loadout Endpoint",
+        "operationId": "save_loadout_endpoint_manager_elevator_loadout_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoadoutSaveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElevatorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/manager/cargos": {
+      "get": {
+        "tags": [
+          "manager"
+        ],
+        "summary": "List Available",
+        "operationId": "list_available_manager_cargos_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/CargoSize"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Size"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/OrderDirection"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Direction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CargoOut"
+                  },
+                  "title": "Response List Available Manager Cargos Get"
                 }
               }
             }
@@ -592,6 +766,45 @@
         ],
         "title": "CargosSaveRequest"
       },
+      "ElevatorLocation": {
+        "type": "string",
+        "enum": [
+          "earth",
+          "orbit",
+          "in_transit"
+        ],
+        "title": "ElevatorLocation"
+      },
+      "ElevatorOut": {
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/ElevatorLocation"
+          },
+          "max_weight_kg": {
+            "type": "number",
+            "title": "Max Weight Kg"
+          },
+          "current_weight_kg": {
+            "type": "number",
+            "title": "Current Weight Kg"
+          },
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/SlotOut"
+            },
+            "type": "array",
+            "title": "Slots"
+          }
+        },
+        "type": "object",
+        "required": [
+          "location",
+          "max_weight_kg",
+          "current_weight_kg",
+          "slots"
+        ],
+        "title": "ElevatorOut"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -604,6 +817,20 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "LoadoutSaveRequest": {
+        "properties": {
+          "placements": {
+            "items": {
+              "$ref": "#/components/schemas/PlacementItem"
+            },
+            "type": "array",
+            "title": "Placements"
+          }
+        },
+        "type": "object",
+        "title": "LoadoutSaveRequest",
+        "description": "Декларативный snapshot манифеста: ячейка не упомянутая в payload — пуста.\nПустой список — корректная команда «выгрузить всё»."
       },
       "LoginRequest": {
         "properties": {
@@ -737,6 +964,34 @@
         ],
         "title": "OrderStatus"
       },
+      "OrderStatusFilter": {
+        "type": "string",
+        "enum": [
+          "created",
+          "in_progress",
+          "delivered"
+        ],
+        "title": "OrderStatusFilter",
+        "description": "Допустимые значения для query-фильтра в GET /orders.\ncancelled намеренно отсутствует — отменённые заказы клиенту не показываем."
+      },
+      "PlacementItem": {
+        "properties": {
+          "slot_id": {
+            "type": "integer",
+            "title": "Slot Id"
+          },
+          "cargo_id": {
+            "type": "integer",
+            "title": "Cargo Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slot_id",
+          "cargo_id"
+        ],
+        "title": "PlacementItem"
+      },
       "Role": {
         "type": "string",
         "enum": [
@@ -745,6 +1000,34 @@
           "client"
         ],
         "title": "Role"
+      },
+      "SlotOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "size": {
+            "$ref": "#/components/schemas/CargoSize"
+          },
+          "cargo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CargoOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "size",
+          "cargo"
+        ],
+        "title": "SlotOut"
       },
       "Token": {
         "properties": {

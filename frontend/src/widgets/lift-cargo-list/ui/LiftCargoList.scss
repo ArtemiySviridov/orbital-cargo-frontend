@@ -3,8 +3,10 @@
 .lift-cargo-list {
   display: flex;
   flex-direction: column;
-  row-gap: rem(10);
+  gap: rem(10);
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 
   padding: rem(20);
 
@@ -12,30 +14,31 @@
   border: 1px solid var(--color-black-15);
   border-radius: var(--border-radius-m);
 
-  z-index: 1;
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: rem(8);
+    flex-shrink: 0;
+  }
 
   &__title {
     border-bottom: 1px solid var(--color-red-90);
     width: fit-content;
   }
 
-  &__info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .info__clicked-cell {
-    font-size: rem(14);
-    color: var(--color-black-30);
+  &__direction {
+    @include fluid-text(12, 10);
+    color: var(--color-grey-60);
+    flex-shrink: 0;
   }
 
   &__list {
     flex: 1;
     display: flex;
-    min-width: rem(400);
     flex-direction: column;
     padding: rem(14);
-    row-gap: rem(10);
+    gap: rem(10);
     background-color: var(--color-black-12);
     border: 1px solid var(--color-black-15);
     border-radius: var(--border-radius-m);
@@ -43,9 +46,88 @@
     scrollbar-gutter: stable;
 
     &--empty {
-      display: flex;
       justify-content: center;
       align-items: center;
     }
+  }
+}
+
+.cargo-item {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8);
+  padding: rem(12);
+
+  border: 1px solid var(--color-black-20);
+  border-radius: var(--border-radius-m);
+  background-color: var(--color-black-10);
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--color-black-30);
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: rem(8);
+  }
+
+  &__name {
+    @include fluid-text(14, 12);
+    color: var(--color-white);
+    font-weight: 600;
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  &__badges {
+    display: flex;
+    align-items: center;
+    gap: rem(6);
+    flex-shrink: 0;
+  }
+
+  &__weight {
+    @include fluid-text(12, 10);
+    color: var(--color-grey-60);
+    white-space: nowrap;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: stretch;
+    gap: rem(8);
+
+    .select-wrapper {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .button {
+      flex-shrink: 0;
+      padding: rem(8) rem(12);
+    }
+  }
+}
+
+.cargo-size-badge {
+  @include fluid-text(11, 10);
+  font-weight: 700;
+  padding: rem(2) rem(6);
+  border-radius: rem(4);
+  color: var(--color-white);
+
+  &--s {
+    background-color: var(--color-black-25);
+  }
+
+  &--m {
+    background-color: var(--color-red-90);
+  }
+
+  &--l {
+    background-color: #6d1a1a;
   }
 }

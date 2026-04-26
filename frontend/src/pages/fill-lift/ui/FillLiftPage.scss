@@ -1,17 +1,110 @@
 @use "@/shared/lib/styles/helpers" as *;
 
 .fill-lift {
+  &__header-info {
+    display: flex;
+    align-items: center;
+    gap: rem(16);
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: rem(12);
+    flex-wrap: wrap;
+  }
+
+  &__location {
+    @include fluid-text(13, 11);
+    padding: rem(3) rem(8);
+    border-radius: rem(4);
+    font-weight: 600;
+
+    &--earth {
+      background-color: var(--color-black-20);
+      color: var(--color-grey-75);
+    }
+
+    &--orbit {
+      background-color: #1a2a3a;
+      color: #6ab4f5;
+    }
+
+    &--in_transit {
+      background-color: #3a2a00;
+      color: var(--color-orange-01);
+    }
+  }
+
+  &__direction {
+    @include fluid-text(13, 11);
+    color: var(--color-grey-60);
+  }
+
+  &__weight {
+    @include fluid-text(13, 11);
+    color: var(--color-white);
+    font-weight: 600;
+  }
+
+  &__unsaved-badge {
+    @include fluid-text(12, 10);
+    color: var(--color-red-70);
+    animation: unsaved-pulse 1.5s infinite alternate;
+  }
+
+  &__actions {
+    display: flex;
+    gap: rem(8);
+  }
+
+  &__error {
+    @include fluid-text(13, 12);
+    color: var(--color-red-70);
+    padding: rem(8) rem(16);
+    background-color: rgba(229, 0, 0, 0.08);
+    border: 1px solid rgba(229, 0, 0, 0.2);
+    border-radius: var(--border-radius-s);
+    margin-bottom: rem(8);
+  }
+
   &__content {
     display: flex;
     column-gap: rem(20);
+    height: calc(100vh - rem(210));
+    overflow: hidden;
+  }
+
+  &__transit-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: rem(10) rem(20);
+    background-color: rgba(229, 0, 0, 0.12);
+    border-bottom: 1px solid var(--color-red-90);
+    color: var(--color-red-70);
+    font-weight: 600;
+    text-align: center;
+    @include fluid-text(14, 12);
   }
 
   @include tablet {
     &__content {
-      display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      height: auto;
+      overflow: visible;
+    }
+
+    &__header-info {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
+}
+
+@keyframes unsaved-pulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
 }

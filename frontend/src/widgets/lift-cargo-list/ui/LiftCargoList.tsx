@@ -1,57 +1,122 @@
-
-import { CargoCard } from "@/entities/cargo/ui";
-import type { ICargo } from "@/entities/cargo/model/types";
-import { AddCargoToCellButton } from "@/features/add-cargo-to-cell";
-
-import "./LiftCargoList.scss";
-import { EndLiftLoadingButton } from "@/features/end-lift-loading-button";
+import { useState } from "react";
+import type { ICargoOut, ISlotOut, OrderDirection } from "@/entities/elevator";
+import { Select } from "@/shared/ui/select";
+import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/shared/ui/empty-state";
+import type { IOption } from "@/shared/ui/select/model/types";
+import "./LiftCargoList.scss";
 
-const cargoList: ICargo[] = [
-  { id: "1", name: "Промышленное оборудование", weight: "2500 кг", applicationNumber: "ORD-2024-001" },
-  { id: "2", name: "Электроника и компоненты", weight: "850 кг", applicationNumber: "ORD-2024-002" },
-  { id: "3", name: "Строительные материалы", weight: "5200 кг", applicationNumber: "ORD-2024-003" },
-  { id: "4", name: "Медицинское оборудование", weight: "430 кг", applicationNumber: "ORD-2024-004" },
-  { id: "5", name: "Продукты питания", weight: "1800 кг", applicationNumber: "ORD-2024-005" },
-  { id: "6", name: "Мебель и интерьер", weight: "920 кг", applicationNumber: "ORD-2024-006" },
-  { id: "7", name: "Химические реактивы", weight: "650 кг", applicationNumber: "ORD-2024-007" },
-  { id: "8", name: "Запчасти для автомобилей", weight: "1450 кг", applicationNumber: "ORD-2024-008" },
-  { id: "9", name: "Текстильные изделия", weight: "780 кг", applicationNumber: "ORD-2024-009" },
-  { id: "10", name: "Спортивный инвентарь", weight: "560 кг", applicationNumber: "ORD-2024-010" },
-];
+interface LiftCargoListProps {
+  cargos: ICargoOut[];
+  slots: ISlotOut[];
+  draft: Map<number, number>;
+  direction: OrderDirection;
+  onAddToSlot: (slotId: number, cargoId: number) => void;
+  disabled: boolean;
+  isLoading: boolean;
+}
 
-const LiftCargoList = () => {
-  const isListEmpty = cargoList.length === 0;
+const DIRECTION_LABELS: Record<OrderDirection, string> = {
+  to_orbit: "На орбиту",
+  to_earth: "На землю",
+};
+
+const SIZE_LABELS: Record<string, string> = { s: "S", m: "M", l: "L" };
+
+interface CargoItemProps {
+  cargo: ICargoOut;
+  slots: ISlotOut[];
+  draft: Map<number, number>;
+  onAdd: (slotId: number, cargoId: number) => void;
+  disabled: boolean;
+}
+
+const CargoItem = ({ cargo, slots, draft, onAdd, disabled }: CargoItemProps) => {
+  const [selectedSlot, setSelectedSlot] = useState<IOption | undefined>(undefined);
+
+  const compatibleSlots = slots.filter(
+    (s) => s.size === cargo.size && !draft.has(s.id),
+  );
+
+  const options: IOption[] = compatibleSlots.map((s) => ({
+    value: String(s.id),
+    title: `Слот #${s.id} (${SIZE_LABELS[s.size]})`,
+  }));
+
+  const handleAdd = () => {
+    if (!selectedSlot) return;
+    onAdd(Number(selectedSlot.value), cargo.id);
+    setSelectedSlot(undefined);
+  };
+
+  return (
+    <li className="cargo-item">
+      <div className="cargo-item__header">
+        <span className="cargo-item__name">{cargo.name}</span>
+        <div className="cargo-item__badges">
+          <span className={`cargo-size-badge cargo-size-badge--${cargo.size}`}>
+            {SIZE_LABELS[cargo.size]}
+          </span>
+          <span className="cargo-item__weight">{cargo.weight_kg} кг</span>
+        </div>
+      </div>
+      <div className="cargo-item__footer">
+        <Select
+          options={options}
+          selected={selectedSlot}
+          placeholder={options.length === 0 ? "Нет свободных слотов" : "Выберите слот..."}
+          onChange={setSelectedSlot}
+          disabled={disabled || options.length === 0}
+        />
+        <Button
+          variant={disabled || !selectedSlot ? "disabled" : "primary"}
+          text="Добавить"
+          onClick={handleAdd}
+          disabled={disabled || !selectedSlot}
+        />
+      </div>
+    </li>
+  );
+};
+
+const LiftCargoList = ({
+  cargos,
+  slots,
+  draft,
+  direction,
+  onAddToSlot,
+  disabled,
+  isLoading,
+}: LiftCargoListProps) => {
+  const isEmpty = cargos.length === 0;
 
   return (
     <div className="lift-cargo-list">
-      <h3 className="h3 lift-cargo-list__title">Грузы</h3>
-      <div className="lift-cargo-list__info">
-        <span><strong>Общий вес:</strong> 0 из 1т</span>
-        <span className="info__clicked-cell">Выбрана ячейка #cellNumber размером "cellSize"</span>
+      <div className="lift-cargo-list__header">
+        <h3 className="h3 lift-cargo-list__title">Доступные грузы</h3>
+        <span className="lift-cargo-list__direction">{DIRECTION_LABELS[direction]}</span>
       </div>
-      <ul className={`lift-cargo-list__list ${isListEmpty ? "lift-cargo-list__list--empty" : ""}`}>
-        {isListEmpty ? (
-          <EmptyState text="Выберите ячейку для отображения списка грузов." />
+
+      <ul className={`lift-cargo-list__list ${isEmpty ? "lift-cargo-list__list--empty" : ""}`}>
+        {isLoading ? (
+          <EmptyState text="Загрузка грузов..." />
+        ) : isEmpty ? (
+          <EmptyState text="Нет доступных грузов для загрузки." />
         ) : (
-          <>
-          {cargoList.map((cargo) => (
-          <li key={cargo.id}>
-            <CargoCard
-              type="loading"
+          cargos.map((cargo) => (
+            <CargoItem
+              key={cargo.id}
               cargo={cargo}
-              buttonSlot={
-                <AddCargoToCellButton cargoId={cargo.id} />
-              }
+              slots={slots}
+              draft={draft}
+              onAdd={onAddToSlot}
+              disabled={disabled}
             />
-          </li>
-        ))}
-          </>
+          ))
         )}
       </ul>
-      <EndLiftLoadingButton />
     </div>
   );
-}
+};
 
 export default LiftCargoList;

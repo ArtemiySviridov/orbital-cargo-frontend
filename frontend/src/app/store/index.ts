@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import cargoReducer from "@/entities/cargo/model/cargoSlice";
 import { authApi, authReducer } from "@/entities/auth";
 import { orderApi } from "@/entities/application";
+import { elevatorApi } from "@/entities/elevator";
 
 export const store = configureStore({
   reducer: {
@@ -9,9 +10,14 @@ export const store = configureStore({
     auth: authReducer,
     [authApi.reducerPath]: authApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
+    [elevatorApi.reducerPath]: elevatorApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, orderApi.middleware),
+    getDefaultMiddleware().concat(
+      authApi.middleware,
+      orderApi.middleware,
+      elevatorApi.middleware,
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

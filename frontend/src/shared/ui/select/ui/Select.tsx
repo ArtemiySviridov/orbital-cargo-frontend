@@ -24,11 +24,14 @@ const Select = ({
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const [dropdownStyles, setDropdownStyles] = useState<React.CSSProperties>({});   
-  useEffect(() => {
-    if (isOpen && rootRef.current) {
-      const rect = rootRef.current.getBoundingClientRect();
+  const [dropdownStyles, setDropdownStyles] = useState<React.CSSProperties>({});
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updatePosition = () => {
+      if (!rootRef.current) return;
+      const rect = rootRef.current.getBoundingClientRect();
       setDropdownStyles({
         position: "fixed",
         top: rect.bottom + 6,
@@ -36,7 +39,15 @@ const Select = ({
         width: rect.width,
         zIndex: 9999,
       });
-    }
+    };
+
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
   }, [isOpen]);
 
   /* 🔒 Закрытие по клику вне */

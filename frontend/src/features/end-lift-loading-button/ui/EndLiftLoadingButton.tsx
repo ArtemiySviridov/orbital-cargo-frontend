@@ -6,7 +6,8 @@ const EndLiftLoadingButton = () => {
     <Button
       text="Закончить загрузку"
       icon={<Package size={22} />}
-      variant="disabled"
+      variant="secondary"
+      disabled
     />
   );
 };

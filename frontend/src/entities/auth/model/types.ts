@@ -8,6 +8,7 @@ export interface IUser {
 export interface IAuthState {
   user: IUser | null;
   accessToken: string | null;
+  role: string | null;
 }
 
 export interface ILoginRequest {

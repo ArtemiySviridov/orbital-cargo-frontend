@@ -17,8 +17,8 @@ const LoginForm = () => {
     }
 
     try {
-      await loginRequest({ email, password }).unwrap();
-      navigate("/applications");
+      const loginResponse = await loginRequest({ email, password }).unwrap();
+      navigate(loginResponse.role === "admin" ? "/operator-panel" : "/applications");
     } catch {
       // Error state is handled by RTK Query mutation state
     }
@@ -50,7 +50,8 @@ const LoginForm = () => {
       </div>
       <div className='login-form__submit-button'>
         <Button
-          variant={isLoading ? "disabled" : "primary"}
+          variant="primary"
+          disabled={isLoading}
           type='button'
           text='Войти'
           onClick={handleLogin}

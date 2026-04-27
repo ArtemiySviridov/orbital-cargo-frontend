@@ -223,6 +223,258 @@
         ]
       }
     },
+    "/admin/elevator": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Get Elevator",
+        "operationId": "get_elevator_admin_elevator_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminElevatorOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/system/preflight": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "System Preflight",
+        "operationId": "system_preflight_admin_system_preflight_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreflightResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/system/reset": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "System Reset",
+        "operationId": "system_reset_admin_system_reset_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/mission/launch": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Mission Launch",
+        "operationId": "mission_launch_admin_mission_launch_post",
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/mission/abort": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Mission Abort",
+        "operationId": "mission_abort_admin_mission_abort_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/missions": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Missions",
+        "operationId": "list_missions_admin_missions_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/MissionStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MissionOut"
+                  },
+                  "title": "Response List Missions Admin Missions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/mission/{mission_id}/log": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Mission Log",
+        "description": "Поток событий миссии для UI: «Двери закрылись» / «Старт через 3» / «Финиш!».\nКлиент дёргает поллингом — список накапливается по мере «реального времени» полёта.\nЭто не аудит-журнал, а нарратив для отображения.",
+        "operationId": "mission_log_admin_mission__mission_id__log_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "mission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionLogOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/orders": {
       "post": {
         "tags": [
@@ -459,6 +711,172 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OrderOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{order_id}/documents": {
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Upload Documents",
+        "operationId": "upload_documents_orders__order_id__documents_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_documents_orders__order_id__documents_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentOut"
+                  },
+                  "title": "Response Upload Documents Orders  Order Id  Documents Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Get Documents",
+        "operationId": "get_documents_orders__order_id__documents_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentOut"
+                  },
+                  "title": "Response Get Documents Orders  Order Id  Documents Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{order_id}/documents/{filename}": {
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Download Document",
+        "operationId": "download_document_orders__order_id__documents__filename__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Order Id"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Filename"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
                 }
               }
             }
@@ -730,6 +1148,61 @@
   },
   "components": {
     "schemas": {
+      "AdminElevatorOut": {
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/ElevatorLocation"
+          },
+          "max_weight_kg": {
+            "type": "number",
+            "title": "Max Weight Kg"
+          },
+          "current_weight_kg": {
+            "type": "number",
+            "title": "Current Weight Kg"
+          },
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/SlotOut"
+            },
+            "type": "array",
+            "title": "Slots"
+          },
+          "current_mission": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MissionOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "location",
+          "max_weight_kg",
+          "current_weight_kg",
+          "slots"
+        ],
+        "title": "AdminElevatorOut",
+        "description": "Расширенный вид лифта для админа: + текущая миссия.\nСостояние подсистем отдаётся отдельно через POST /admin/system/preflight."
+      },
+      "Body_upload_documents_orders__order_id__documents_post": {
+        "properties": {
+          "archive": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Archive"
+          }
+        },
+        "type": "object",
+        "required": [
+          "archive"
+        ],
+        "title": "Body_upload_documents_orders__order_id__documents_post"
+      },
       "CargoCreate": {
         "properties": {
           "name": {
@@ -860,7 +1333,8 @@
           "pending",
           "in_transit",
           "delivered",
-          "cancelled"
+          "cancelled",
+          "lost"
         ],
         "title": "CargoStatus"
       },
@@ -880,6 +1354,30 @@
           "cargos"
         ],
         "title": "CargosSaveRequest"
+      },
+      "DocumentOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "original_filename": {
+            "type": "string",
+            "title": "Original Filename"
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Uploaded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "original_filename",
+          "uploaded_at"
+        ],
+        "title": "DocumentOut"
       },
       "ElevatorLocation": {
         "type": "string",
@@ -965,6 +1463,116 @@
           "password"
         ],
         "title": "LoginRequest"
+      },
+      "MissionLogEntry": {
+        "properties": {
+          "ts": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ts"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ts",
+          "message"
+        ],
+        "title": "MissionLogEntry"
+      },
+      "MissionLogOut": {
+        "properties": {
+          "mission_id": {
+            "type": "integer",
+            "title": "Mission Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MissionStatus"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/MissionLogEntry"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mission_id",
+          "status",
+          "entries"
+        ],
+        "title": "MissionLogOut",
+        "description": "Поток событий миссии для polling-режима. Сообщения накапливаются по\nмере «реального времени» миссии — клиент дёргает endpoint раз в N секунд\nи просто отрисовывает все entries."
+      },
+      "MissionOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/OrderDirection"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MissionStatus"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "eta_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Eta At"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "started_by_user_id": {
+            "type": "integer",
+            "title": "Started By User Id"
+          },
+          "cargo_count": {
+            "type": "integer",
+            "title": "Cargo Count",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "direction",
+          "status",
+          "started_at",
+          "eta_at",
+          "completed_at",
+          "started_by_user_id"
+        ],
+        "title": "MissionOut"
+      },
+      "MissionStatus": {
+        "type": "string",
+        "enum": [
+          "in_progress",
+          "delivered",
+          "aborted"
+        ],
+        "title": "MissionStatus"
       },
       "OrderCreate": {
         "properties": {
@@ -1075,7 +1683,9 @@
           "created",
           "in_progress",
           "delivered",
-          "cancelled"
+          "cancelled",
+          "lost",
+          "partially_lost"
         ],
         "title": "OrderStatus"
       },
@@ -1106,6 +1716,41 @@
           "cargo_id"
         ],
         "title": "PlacementItem"
+      },
+      "PreflightResult": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "subsystems": {
+            "items": {
+              "$ref": "#/components/schemas/SubsystemOut"
+            },
+            "type": "array",
+            "title": "Subsystems"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/SubsystemOut"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Checked At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ok",
+          "subsystems",
+          "errors",
+          "checked_at"
+        ],
+        "title": "PreflightResult"
       },
       "Role": {
         "type": "string",
@@ -1143,6 +1788,42 @@
           "cargo"
         ],
         "title": "SlotOut"
+      },
+      "SubsystemName": {
+        "type": "string",
+        "enum": [
+          "telemetry",
+          "hydraulics",
+          "power",
+          "life_support",
+          "navigation",
+          "comms"
+        ],
+        "title": "SubsystemName"
+      },
+      "SubsystemOut": {
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/SubsystemName"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SubsystemStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "status"
+        ],
+        "title": "SubsystemOut"
+      },
+      "SubsystemStatus": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "error"
+        ],
+        "title": "SubsystemStatus"
       },
       "Token": {
         "properties": {

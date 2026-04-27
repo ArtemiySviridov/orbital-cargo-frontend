@@ -1,11 +1,11 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "@/shared/api/axiosBaseQuery";
-import type { IOrderCreate, IOrderListItem, IOrderOut, ICargosSaveRequest, OrderStatus } from "../model/types";
+import type { IOrderCreate, IOrderListItem, IOrderOut, ICargosSaveRequest, OrderStatus, IDocumentOut } from "../model/types";
 
 export const orderApi = createApi({
   reducerPath: "orderApi",
   baseQuery: axiosBaseQuery(),
-  tagTypes: ["Orders"],
+  tagTypes: ["Orders", "Documents"],
   endpoints: (builder) => ({
     getOrders: builder.query<IOrderListItem[], { status?: OrderStatus }>({
       query: ({ status } = {}) => ({ url: "/orders", params: { status } }),
@@ -31,6 +31,18 @@ export const orderApi = createApi({
       }),
       invalidatesTags: (_result, _error, { orderId }) => ["Orders", { type: "Orders", id: orderId }],
     }),
+    getOrderDocuments: builder.query<IDocumentOut[], number>({
+      query: (orderId) => ({ url: `/orders/${orderId}/documents` }),
+      providesTags: (_result, _error, orderId) => [{ type: "Documents", id: orderId }],
+    }),
+    uploadOrderDocuments: builder.mutation<IDocumentOut[], { orderId: number; archive: File }>({
+      query: ({ orderId, archive }) => {
+        const formData = new FormData();
+        formData.append("archive", archive);
+        return { url: `/orders/${orderId}/documents`, method: "POST", data: formData };
+      },
+      invalidatesTags: (_result, _error, { orderId }) => [{ type: "Documents", id: orderId }],
+    }),
   }),
 });
 
@@ -40,4 +52,6 @@ export const {
   useGetOrderByIdQuery,
   useCancelOrderMutation,
   useSaveOrderCargosMutation,
+  useGetOrderDocumentsQuery,
+  useUploadOrderDocumentsMutation,
 } = orderApi;

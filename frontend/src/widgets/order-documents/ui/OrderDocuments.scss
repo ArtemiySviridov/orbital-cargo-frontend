@@ -1,0 +1,103 @@
+@use '@/shared/lib/styles/helpers' as *;
+
+.order-documents {
+  display: flex;
+  flex-direction: column;
+  row-gap: rem(16);
+  height: 100%;
+
+  &__list-area {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(8);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(6);
+    max-height: rem(240);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    padding: rem(8);
+    background-color: var(--color-black-10);
+    border: 1px solid var(--color-black-20);
+    border-radius: var(--border-radius-m);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    column-gap: rem(12);
+    padding: rem(8) rem(12);
+    border: 1px solid var(--color-black-20);
+    border-radius: var(--border-radius-s);
+    background-color: var(--color-black-08);
+    transition: background-color var(--transition-duration);
+
+    @include hover {
+      background-color: var(--color-black-06);
+    }
+  }
+
+  &__filename {
+    flex: 1;
+    @include fluid-text(14, 12);
+    color: var(--color-white);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__date {
+    @include fluid-text(12, 11);
+    color: var(--color-grey-60);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: rem(10);
+    padding: rem(20);
+    border: 2px dashed var(--color-black-25);
+    border-radius: var(--border-radius-m);
+    background-color: var(--color-black-10);
+    transition: border-color var(--transition-duration), background-color var(--transition-duration);
+
+    &--active {
+      border-color: var(--color-red-45);
+      background-color: var(--color-black-12);
+    }
+  }
+
+  &__upload-icon {
+    color: var(--color-grey-60);
+  }
+
+  &__dropzone-hint {
+    @include fluid-text(14, 12);
+    color: var(--color-grey-60);
+  }
+
+  &__dropzone-formats {
+    @include fluid-text(12, 10);
+    color: var(--color-black-30);
+    letter-spacing: 0.03em;
+  }
+
+  &__message {
+    @include fluid-text(13, 12);
+    color: var(--color-grey-60);
+
+    &--error {
+      color: var(--color-red-70);
+    }
+
+    &--success {
+      color: var(--color-green-01);
+    }
+  }
+}

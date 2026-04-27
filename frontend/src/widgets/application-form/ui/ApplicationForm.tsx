@@ -14,6 +14,7 @@ import {
 import type { OrderDirection, CargoSize, IOrderOut } from "@/entities/application";
 import { Modal } from "@/shared/ui/modal";
 import EditCargosList, { type DraftServerCargo } from "./EditCargosList";
+import { OrderDocuments } from "@/widgets/order-documents";
 
 import "./ApplicationForm.scss";
 
@@ -41,6 +42,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
     order ? order.cargos.map((c) => ({ cargo: c, markedForDelete: false })) : []
   );
   const [deletedNewCargoIds, setDeletedNewCargoIds] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<"cargos" | "documents">("cargos");
 
   // ── modal state ──
   const [showLastCargoModal, setShowLastCargoModal] = useState(false);
@@ -240,15 +242,39 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
             />
           </section>
           <section className="create-application-form__cargos-list">
-            <EditCargosList
-              draftServerCargos={draftServerCargos}
-              newCargos={newCargos}
-              deletedNewCargoIds={deletedNewCargoIds}
-              totalCount={totalCount}
-              onToggleDeleteServer={handleToggleDeleteServer}
-              onToggleDeleteNew={handleToggleDeleteNew}
-              onReset={handleReset}
-            />
+            <div className="create-application-form__tabs" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === "cargos"}
+                className={`create-application-form__tab-btn${activeTab === "cargos" ? " create-application-form__tab-btn--active" : ""}`}
+                onClick={() => setActiveTab("cargos")}
+              >
+                Грузы ({totalCount})
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === "documents"}
+                className={`create-application-form__tab-btn${activeTab === "documents" ? " create-application-form__tab-btn--active" : ""}`}
+                onClick={() => setActiveTab("documents")}
+              >
+                Документы
+              </button>
+            </div>
+            {activeTab === "cargos" ? (
+              <EditCargosList
+                draftServerCargos={draftServerCargos}
+                newCargos={newCargos}
+                deletedNewCargoIds={deletedNewCargoIds}
+                totalCount={totalCount}
+                onToggleDeleteServer={handleToggleDeleteServer}
+                onToggleDeleteNew={handleToggleDeleteNew}
+                onReset={handleReset}
+              />
+            ) : (
+              <OrderDocuments orderId={order.id} />
+            )}
           </section>
         </form>
 
@@ -295,10 +321,40 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
         <ApplicationFormButtons type="create" isLoading={isCreating} />
       </section>
       <section className="create-application-form__cargos-list">
-        <p className="form-error form-error--reserved" aria-hidden={!cargosError}>
-          {cargosError}
-        </p>
-        <CargosList />
+        <div className="create-application-form__tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "cargos"}
+            className={`create-application-form__tab-btn${activeTab === "cargos" ? " create-application-form__tab-btn--active" : ""}`}
+            onClick={() => setActiveTab("cargos")}
+          >
+            Грузы
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "documents"}
+            className={`create-application-form__tab-btn${activeTab === "documents" ? " create-application-form__tab-btn--active" : ""}`}
+            onClick={() => setActiveTab("documents")}
+          >
+            Документы
+          </button>
+        </div>
+        {activeTab === "cargos" ? (
+          <>
+            <p className="form-error form-error--reserved" aria-hidden={!cargosError}>
+              {cargosError}
+            </p>
+            <CargosList />
+          </>
+        ) : (
+          <div className="create-application-form__docs-placeholder">
+            <span className="create-application-form__docs-placeholder-text">
+              Документы будут доступны после создания заявки
+            </span>
+          </div>
+        )}
       </section>
     </form>
   );

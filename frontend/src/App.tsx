@@ -6,7 +6,7 @@ import { CreateApplicationPage } from "./pages/create-application";
 import { ApplicationDetailsPage } from "./pages/application-details";
 import { FillLiftPage } from "./pages/fill-lift";
 import { OperatorPanelPage } from "./pages/operator-panel";
-import { selectIsAuthenticated, useMeQuery } from "./entities/auth";
+import { selectAuth, selectIsAuthenticated, useMeQuery } from "./entities/auth";
 import { useAppSelector } from "./app/store/hooks";
 
 const ProtectedRoute = () => {
@@ -16,7 +16,11 @@ const ProtectedRoute = () => {
 
 const PublicRoute = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  return isAuthenticated ? <Navigate to="/applications" replace /> : <Outlet />;
+  const { user, role } = useAppSelector(selectAuth);
+  const effectiveRole = user?.role ?? role;
+  const redirectPath = effectiveRole === "admin" ? "/operator-panel" : "/applications";
+
+  return isAuthenticated ? <Navigate to={redirectPath} replace /> : <Outlet />;
 };
 
 function App() {

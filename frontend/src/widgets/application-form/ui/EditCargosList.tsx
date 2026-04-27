@@ -16,6 +16,7 @@ const CARGO_STATUS_LABELS: Record<CargoStatus, string> = {
   in_transit: "В доставке",
   delivered: "Доставлен",
   cancelled: "Отменён",
+  lost: "Потерян",
 };
 
 interface EditCargosListProps {

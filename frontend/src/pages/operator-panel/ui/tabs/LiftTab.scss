@@ -1,0 +1,96 @@
+@use "@/shared/lib/styles/helpers" as *;
+
+.lift-tab {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16);
+  padding: rem(20);
+  border-radius: var(--border-radius-m);
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: rem(12);
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: rem(12);
+  }
+
+  &__location {
+    padding: rem(4) rem(12);
+    border-radius: var(--border-radius-s);
+    font-size: rem(13);
+    font-weight: 600;
+
+    &--earth {
+      background: rgba(111, 214, 93, 0.15);
+      color: var(--color-green-01);
+    }
+
+    &--orbit {
+      background: rgba(230, 187, 31, 0.15);
+      color: var(--color-orange-01);
+    }
+
+    &--in_transit {
+      background: rgba(230, 187, 31, 0.15);
+      color: var(--color-orange-01);
+      animation: pulse 1.5s infinite;
+    }
+  }
+
+  &__weight {
+    font-size: rem(14);
+    color: var(--color-grey-70);
+  }
+
+  &__mission-badge {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+    padding: rem(6) rem(14);
+    border-radius: var(--border-radius-s);
+    font-size: rem(13);
+
+    &--in_progress {
+      background: rgba(230, 187, 31, 0.12);
+      border: 1px solid rgba(230, 187, 31, 0.3);
+      color: var(--color-orange-01);
+    }
+
+    &--delivered {
+      background: rgba(111, 214, 93, 0.12);
+      border: 1px solid rgba(111, 214, 93, 0.3);
+      color: var(--color-green-01);
+    }
+
+    &--aborted {
+      background: rgba(229, 0, 0, 0.12);
+      border: 1px solid rgba(229, 0, 0, 0.3);
+      color: var(--color-red-70);
+    }
+  }
+
+  &__mission-status {
+    font-weight: 600;
+  }
+
+  &__no-data {
+    color: var(--color-grey-60);
+    font-size: rem(14);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}

@@ -1,7 +1,7 @@
 @use '@shared/lib/styles/helpers' as *;
 
 .empty-state {
-  @include fluid-text(16, 12);
+  @include fluid-text(14, 12);
   display: flex;
   flex-direction: row ;
   row-gap: rem(30);
@@ -15,8 +15,8 @@
 
   @include laptop-above {
     &__empty-emblem {
-      width: rem(150);
-      height: rem(150);
+      width: rem(100);
+      height: rem(100);
     }
   }
 

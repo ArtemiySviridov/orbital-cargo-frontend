@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 import "./Tab.scss";
 import type { TabProps } from "../model/types";
 
@@ -9,9 +9,9 @@ const Tab = (props: TabProps) => {
   } = props;
 
   return (
-    <Link className="tab" to={link}>
+    <NavLink className="tab" to={link}>
       {text}
-    </Link>
+    </NavLink>
   );
 };
 

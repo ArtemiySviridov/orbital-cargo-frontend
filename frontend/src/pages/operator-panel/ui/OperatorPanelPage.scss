@@ -2,10 +2,56 @@
 
 .operator-panel {
   display: flex;
-  column-gap: rem(15);
-  
-  &__logs, &__mission-buttons, &__status-animation {
-    z-index: 1;
+  flex-direction: column;
+  row-gap: rem(20);
+
+  &__tabs {
+    display: flex;
+    gap: rem(8);
+  }
+
+  &__tab {
+    padding: rem(6) rem(16);
+    border-radius: var(--border-radius-s);
+    border: 1px solid var(--color-black-20);
+    background: transparent;
+    color: var(--color-grey-60);
+    font-size: rem(14);
+    font-family: var(--font-family-base);
+    cursor: pointer;
+    transition: all var(--transition-duration);
+
+    &:hover {
+      border-color: var(--color-black-30);
+      color: var(--color-grey-75);
+    }
+
+    &--active {
+      border-color: var(--color-grey-60);
+      color: var(--color-white);
+      background: var(--color-black-15);
+    }
+  }
+
+  &__error {
+    padding: rem(12) rem(16);
+    border-radius: var(--border-radius-s);
+    background: rgba(229, 0, 0, 0.12);
+    border: 1px solid var(--color-red-45);
+    color: var(--color-red-70);
+    font-size: rem(14);
+  }
+
+  &__control {
+    display: flex;
+    column-gap: rem(15);
+    padding: rem(20);
+    border-radius: var(--border-radius-m);
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
   }
 
   &__mission-buttons {
@@ -18,6 +64,7 @@
   &__logs {
     flex: 1;
     display: flex;
+    min-width: 0;
   }
 
   &__status-animation {
@@ -25,5 +72,6 @@
     display: flex;
     flex-direction: column;
     row-gap: rem(15);
+    min-width: 0;
   }
 }

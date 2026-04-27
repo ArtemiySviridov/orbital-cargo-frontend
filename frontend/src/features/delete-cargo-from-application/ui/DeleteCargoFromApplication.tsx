@@ -19,7 +19,7 @@ const DeleteCargoFromApplicationButton = ({ cargoId }: DeleteCargoFromApplicatio
   return (
     <Button
       icon={<X size={22} />}
-      variant="primary"
+      variant="secondary"
       onClick={() => handleDeleteCargoById(cargoId)}
     />
   );

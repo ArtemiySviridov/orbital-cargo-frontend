@@ -1,7 +1,7 @@
 export type OrderDirection = "to_orbit" | "to_earth";
-export type OrderStatus = "created" | "in_progress" | "delivered" | "cancelled";
+export type OrderStatus = "created" | "in_progress" | "delivered" | "cancelled" | "lost" | "partially_lost";
 export type CargoSize = "s" | "m" | "l";
-export type CargoStatus = "pending" | "in_transit" | "delivered" | "cancelled";
+export type CargoStatus = "pending" | "in_transit" | "delivered" | "cancelled" | "lost";
 
 export interface ICargoCreate {
   name: string;
@@ -46,4 +46,10 @@ export interface IOrderListItem {
 
 export interface IOrderOut extends IOrderListItem {
   cargos: ICargoOut[];
+}
+
+export interface IDocumentOut {
+  id: number;
+  original_filename: string;
+  uploaded_at: string;
 }

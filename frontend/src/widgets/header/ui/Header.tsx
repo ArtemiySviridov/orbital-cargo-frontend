@@ -7,12 +7,18 @@ import { useNavigate } from 'react-router';
 import { selectAuth, useLogoutMutation } from '@/entities/auth';
 import { useAppSelector } from '@/app/store/hooks';
 
+const ROLE_LABELS: Record<string, string> = {
+  client: "Клиент",
+  manager: "Менеджер",
+  admin: "Оператор",
+};
+
 const Header = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector(selectAuth);
   const [logout] = useLogoutMutation();
   const role = user?.role ?? "client";
-  const isRoleManager = role === "manager";
+  const isStaff = role === "manager";
 
   const handleLogout = async () => {
     await logout().unwrap();
@@ -30,11 +36,13 @@ const Header = () => {
           height="60"
         />
       </div>
-      {isRoleManager && <TabMenu />}
+      {isStaff && <TabMenu />}
       <div className="header__info-block">
         <div className="header__info-block__user-info">
-          <span>Пользователь: {user?.email ?? "—"}</span>
-          <span>Роль: {user?.role ?? "client"}</span>
+          <span className="header__info-block__email">{user?.email ?? "—"}</span>
+          <span className={`header__info-block__role-badge header__info-block__role-badge--${role}`}>
+            {ROLE_LABELS[role] ?? role}
+          </span>
         </div>
         <Button
           icon={<LogOut size={20} />}

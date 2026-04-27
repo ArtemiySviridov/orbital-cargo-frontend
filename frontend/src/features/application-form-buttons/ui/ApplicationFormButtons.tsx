@@ -22,14 +22,16 @@ const ApplicationFormButtons = (props: ApplicationFormButtonsProps) => {
       {isCreate ? (
         <Button
           text={isLoading ? "Создание…" : "Создать"}
-          variant={isLoading ? "disabled" : "primary"}
+          variant="primary"
+          disabled={isLoading}
           type="submit"
         />
       ) : (
         <>
           <Button
             text={isSaveLoading ? "Сохранение…" : "Сохранить"}
-            variant={isSaveLoading ? "disabled" : "primary"}
+            variant="primary"
+            disabled={isSaveLoading}
             icon={<Save size={24} />}
             type="button"
             onClick={onSave}
@@ -37,7 +39,8 @@ const ApplicationFormButtons = (props: ApplicationFormButtonsProps) => {
           {canDelete && (
             <Button
               text={isDeleteLoading ? "Удаление…" : "Удалить заявку"}
-              variant={isDeleteLoading ? "disabled" : "secondary"}
+              variant="secondary"
+              disabled={isDeleteLoading}
               icon={<Trash2 size={24} />}
               type="button"
               onClick={onDelete}

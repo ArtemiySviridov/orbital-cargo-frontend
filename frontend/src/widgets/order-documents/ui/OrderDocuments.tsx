@@ -8,7 +8,7 @@ import { tokenStorage } from "@/shared/api/tokenStorage";
 import "./OrderDocuments.scss";
 
 const ALLOWED_EXTENSIONS = [".zip", ".tar", ".tar.gz", ".tgz"];
-const MAX_SIZE = 10 * 1024 * 1024;
+const MAX_SIZE = 10 * 1024 * 1024; 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "https://orbitalcargo.wonderrfau1t.site";
 
 function validateArchive(file: File): string | null {

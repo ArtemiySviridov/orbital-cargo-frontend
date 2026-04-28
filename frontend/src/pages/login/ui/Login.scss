@@ -33,24 +33,24 @@
 /* 🌌 ORBIT SYSTEM */
 .orbit {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 380px;
+  height: 380px;
 }
 
-/* 🔴 ЦЕНТР (хаб/станция) */
+/* ЦЕНТР (хаб/станция) */
 .orbit__center {
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
   background: var(--color-grey-90);
   border-radius: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px var(--color-grey-90), 0 0 25px var(--color-red-70);
+  box-shadow: 0 0 15px var(--color-grey-90), 0 0 36px rgba(255, 255, 255, 0.15);
 }
 
-/* 🔵 ОРБИТЫ */
+/* ОРБИТЫ */
 .orbit__ring {
   position: absolute;
   border: 1px dashed var(--color-black-25);
@@ -61,31 +61,43 @@
 }
 
 .orbit__ring--1 {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
 }
 
 .orbit__ring--2 {
-  width: 200px;
-  height: 200px;
+  width: 240px;
+  height: 240px;
 }
 
 .orbit__ring--3 {
-  width: 280px;
-  height: 280px;
+  width: 330px;
+  height: 330px;
 }
 
-/* 🛰 СПУТНИК (груз) */
+/* СПУТНИК (контейнер-груз) */
 .orbit__satellite {
-  width: 8px;
-  height: 8px;
-  background: var(--color-red-45);
-  border-radius: 50%;
+  width: 10px;
+  height: 7px;
+  background: var(--color-grey-80);
+  border-radius: 1px;
   position: absolute;
-  top: 0;
+  top: -4px;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 6px var(--color-red-45), 0 0 12px var(--color-red-70);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 255, 255, 0.2);
+}
+
+.orbit__satellite--opposite {
+  top: auto;
+  bottom: -4px;
+}
+
+.orbit__satellite--right {
+  top: 50%;
+  left: auto;
+  right: -5px;
+  transform: translateY(-50%);
 }
 
 /* 🔄 АНИМАЦИЯ */
@@ -120,90 +132,86 @@
 
 .star-dust__particle {
   position: absolute;
-  width: 2px;
-  height: 2px;
+  top: var(--y);
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
   background: radial-gradient(circle, var(--color-grey-90), transparent);
   border-radius: 50%;
   opacity: 0;
-  animation: float-particle 4s ease-in-out infinite;
-}
-
-.star-dust__particle--1 {
-  top: 15%;
-  left: 20%;
-  animation-delay: 0s;
-  width: 3px;
-  height: 3px;
-}
-
-.star-dust__particle--2 {
-  top: 75%;
-  left: 85%;
-  animation-delay: 0.8s;
-  width: 1.5px;
-  height: 1.5px;
-}
-
-.star-dust__particle--3 {
-  top: 30%;
-  left: 88%;
-  animation-delay: 1.5s;
-  width: 2.5px;
-  height: 2.5px;
-}
-
-.star-dust__particle--4 {
-  top: 85%;
-  left: 15%;
-  animation-delay: 2.2s;
-  width: 2px;
-  height: 2px;
-}
-
-.star-dust__particle--5 {
-  top: 50%;
-  left: 10%;
-  animation-delay: 3s;
-  width: 3px;
-  height: 3px;
-}
-
-.star-dust__particle--6 {
-  top: 10%;
-  left: 45%;
-  animation-delay: 3.5s;
-  width: 1.5px;
-  height: 1.5px;
+  animation: float-particle var(--duration) ease-in-out infinite;
+  animation-delay: var(--delay);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
 }
 
 @keyframes float-particle {
   0% {
     opacity: 0;
-    transform: translateY(0px) scale(0);
+    transform: translate(0, 0) scale(0.4);
   }
   50% {
-    opacity: 0.6;
-    transform: translateY(-20px) scale(1);
+    opacity: var(--opacity);
+    transform: translate(var(--drift-x), calc(var(--drift-y) * -0.45)) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateY(-40px) scale(0);
+    transform: translate(calc(var(--drift-x) * -0.35), calc(var(--drift-y) * -1)) scale(0.4);
+  }
+}
+
+/* Поднимающиеся грузы (лифт) */
+.cargo-lift {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cargo-lift__parcel {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  background: var(--color-grey-80);
+  border-radius: 1px;
+  opacity: 0;
+  animation: rise-cargo var(--duration) ease-in-out infinite;
+  animation-delay: var(--delay);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes rise-cargo {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  20% {
+    opacity: var(--opacity);
+  }
+  80% {
+    opacity: var(--opacity);
+    transform: translate(var(--drift-x), -60px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--drift-x), -90px) scale(0.5);
   }
 }
 
 /* Светящаяся аура */
 .orbit-aura {
   position: absolute;
-  width: 350px;
-  height: 350px;
+  width: 430px;
+  height: 430px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(var(--color-red-70-rgb), 0.05) 0%,
-    rgba(var(--color-red-70-rgb), 0.02) 50%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
     transparent 80%
   );
-  animation: pulse-aura 4s ease-in-out infinite;
+  animation: pulse-aura 5s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -221,39 +229,39 @@
 /* Декоративный текст */
 .orbital-text {
   position: absolute;
-  bottom: 15%;
+  bottom: 11%;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
-  font-family: monospace;
+  font-family: var(--font-family-base);
   pointer-events: none;
   white-space: nowrap;
 }
 
 .orbital-text__line {
   display: block;
-  font-size: 10px;
-  letter-spacing: 6px;
-  color: var(--color-grey-60);
-  opacity: 0.6;
-  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: 7px;
+  color: var(--color-grey-90);
+  opacity: 0.92;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: none;
   animation: fade-text 3s ease-in-out infinite;
 }
 
 .orbital-text__line:first-child {
-  font-size: 12px;
-  letter-spacing: 8px;
-  margin-bottom: 4px;
-  opacity: 0.8;
+  margin-bottom: 6px;
 }
 
 .orbital-text__subtitle {
   display: block;
-  font-size: 7px;
-  letter-spacing: 4px;
+  font-size: 14px;
+  letter-spacing: 6px;
   color: var(--color-grey-50);
-  margin-top: 6px;
-  opacity: 0.4;
+  margin-top: 8px;
+  opacity: 0.78;
+  text-transform: uppercase;
 }
 
 @keyframes fade-text {
@@ -280,75 +288,5 @@
       rgba(0, 0, 0, 0.3) 100%
     );
     pointer-events: none;
-  }
-}
-
-@for $i from 1 through 20 {
-  .star-dust__slow--#{$i} {
-    top: random(100) + '%';
-    left: random(100) + '%';
-    width: 1px;
-    height: 1px;
-    animation: float-slow (random(8) + 6s) ease-in-out infinite;
-    animation-delay: random(6) + s;
-  }
-}
-
-// Группа 2: Средние частицы
-@for $i from 1 through 20 {
-  .star-dust__medium--#{$i} {
-    top: random(100) + '%';
-    left: random(100) + '%';
-    width: 2px;
-    height: 2px;
-    animation: float-medium (random(6) + 4s) ease-in-out infinite;
-    animation-delay: random(4) + s;
-  }
-}
-
-// Группа 3: Крупные яркие частицы (ближе к зрителю)
-@for $i from 1 through 10 {
-  .star-dust__large--#{$i} {
-    top: random(100) + '%';
-    left: random(100) + '%';
-    width: 4px;
-    height: 4px;
-    background: radial-gradient(circle, var(--color-red-45), transparent);
-    animation: float-large (random(4) + 3s) ease-in-out infinite;
-    animation-delay: random(3) + s;
-    filter: blur(0.5px);
-  }
-}
-
-@keyframes float-slow {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(0) translateX(0);
-  }
-  50% {
-    opacity: 0.3;
-    transform: translateY(-40px) translateX(10px);
-  }
-}
-
-@keyframes float-medium {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(0) translateX(0);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translateY(-50px) translateX(-15px);
-  }
-}
-
-@keyframes float-large {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(0) translateX(0) scale(0);
-  }
-  50% {
-    opacity: 0.9;
-    transform: translateY(-70px) translateX(20px) scale(1.5);
   }
 }

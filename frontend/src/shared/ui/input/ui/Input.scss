@@ -21,12 +21,25 @@
     overflow: hidden;
     transition: all 0.25s ease;
 
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+      -webkit-text-fill-color: var(--color-white);
+      box-shadow: 0 0 0 1000px var(--color-black-08) inset;
+      font-size: inherit;
+      transition: background-color 5000s ease-in-out 0s, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
     &:focus {
       transform: translateY(-4px);
       background-color: var(--color-black-06);
       box-shadow: 0 12px 30px rgba(0,0,0,0.4);
       color: var(--color-white);
       border-color: var(--color-red-90);
+    }
+
+    &:focus:-webkit-autofill {
+      box-shadow: 0 0 0 1000px var(--color-black-06) inset, 0 12px 30px rgba(0,0,0,0.4);
     }
 
     &--error {

@@ -81,15 +81,18 @@
   overflow: hidden;
 
   &--s {
-    min-height: rem(80);
+    height: rem(90);
+    overflow: hidden;
   }
 
   &--m {
-    min-height: rem(80);
+    height: rem(90);
+    overflow: hidden;
   }
 
   &--l {
-    min-height: rem(160);
+    height: rem(160);
+    overflow: hidden;
   }
 
   &--occupied {

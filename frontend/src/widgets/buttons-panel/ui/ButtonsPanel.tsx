@@ -27,12 +27,6 @@ const SUBSYSTEM_NAMES: Record<string, string> = {
   comms: "Связь",
 };
 
-function formatCheckedAt(iso: string): string {
-  const secs = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-  if (secs < 60) return `${secs} сек назад`;
-  return `${Math.floor(secs / 60)} мин назад`;
-}
-
 export const ButtonsPanel = ({
   elevator,
   preflightResult,
@@ -76,7 +70,7 @@ export const ButtonsPanel = ({
         <div className="buttons-panel__subsystems">
           {!preflightDone ? (
             <span className="buttons-panel__placeholder">
-              Состояние неизвестно — нажмите «Проверить»
+              Состояние систем неизвестно — нажмите «Проверка систем»
             </span>
           ) : (
             preflightResult.subsystems.map((s) => (
@@ -96,7 +90,7 @@ export const ButtonsPanel = ({
         </div>
         {preflightDone && (
           <span className="buttons-panel__checked-at">
-            Проверено {formatCheckedAt(preflightResult.checked_at)}
+            Проверено
           </span>
         )}
         <div className="buttons-panel__actions">

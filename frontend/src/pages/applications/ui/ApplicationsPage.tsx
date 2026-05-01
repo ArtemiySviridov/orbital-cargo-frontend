@@ -19,7 +19,7 @@ const ApplicationsPage = () => {
   return (
     <div className="applications-page container">
       <PageHeader title="Мои заявки">
-        <ListFilters status={statusFilter} onStatusChange={setStatusFilter} />
+        <ListFilters status={statusFilter} onStatusChange={setStatusFilter} isManager={isManager} />
         {!isManager && (
           <Button variant="primary" icon={<Plus size={24} />} text="Создать заявку" onClick={() => navigate('/create-application')} />
         )}

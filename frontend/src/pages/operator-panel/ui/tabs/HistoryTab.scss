@@ -43,6 +43,10 @@
 
   &__table-wrap {
     overflow-x: auto;
+    background: var(--color-black-10);
+    border: 1px solid var(--color-black-20);
+    border-radius: var(--border-radius-s);
+    padding: rem(8) 0;
   }
 
   &__table {
@@ -132,10 +136,20 @@
     border: 1px solid var(--color-black-20);
     border-radius: var(--border-radius-m);
     width: min(rem(560), 90vw);
+    min-height: rem(300);
     max-height: 80vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+  }
+
+  &__log-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: rem(220);
+    padding: rem(16) rem(20);
+    flex: 1;
   }
 
   &__panel-header {
@@ -155,6 +169,8 @@
     overflow-y: auto;
     font-size: rem(13);
     font-family: monospace;
+    min-height: rem(220);
+    flex: 1;
   }
 
   &__log-entry {

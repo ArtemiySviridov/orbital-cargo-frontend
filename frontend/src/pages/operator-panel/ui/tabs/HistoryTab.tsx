@@ -52,7 +52,7 @@ export const HistoryTab = () => {
     limit: 50,
   });
 
-  const { data: logData, isLoading: logLoading } = useGetMissionLogQuery(
+  const { data: logData, isFetching: logFetching } = useGetMissionLogQuery(
     selectedMission?.id ?? 0,
     { skip: !selectedMission },
   );
@@ -136,8 +136,10 @@ export const HistoryTab = () => {
                 />
               </div>
 
-              {logLoading ? (
-                <Loader text="Загружаем лог..." size="sm" />
+              {logFetching ? (
+                <div className="history-tab__log-loader">
+                  <Loader text="Загружаем лог..." size="sm" />
+                </div>
               ) : (
                 <div className="history-tab__log">
                   {(logData?.entries ?? []).length === 0 ? (

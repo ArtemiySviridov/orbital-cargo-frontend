@@ -33,6 +33,12 @@
     }
   }
 
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   &__error {
     padding: rem(12) rem(16);
     border-radius: var(--border-radius-s);

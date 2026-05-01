@@ -13,6 +13,7 @@ const ApplicationFormButtons = (props: ApplicationFormButtonsProps) => {
     isSaveLoading,
     isDeleteLoading,
     canDelete,
+    canSave = true,
   } = props;
 
   const isCreate = type === "create";
@@ -31,7 +32,7 @@ const ApplicationFormButtons = (props: ApplicationFormButtonsProps) => {
           <Button
             text={isSaveLoading ? "Сохранение…" : "Сохранить"}
             variant="primary"
-            disabled={isSaveLoading}
+            disabled={isSaveLoading || !canSave}
             icon={<Save size={24} />}
             type="button"
             onClick={onSave}

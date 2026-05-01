@@ -1,7 +1,7 @@
 @use "@/shared/lib/styles/helpers" as *;
 
 .status {
- @include fluid-text(16, 14);
+  @include fluid-text(16, 14);
   display: flex;
   align-items: center;
   column-gap: rem(3);
@@ -9,4 +9,6 @@
   border: 1px solid var(--color-black-20);
   border-radius: var(--border-radius-l);
   background-color: var(--color-black-12);
+  min-width: rem(120);
+  flex-shrink: 0;
 }

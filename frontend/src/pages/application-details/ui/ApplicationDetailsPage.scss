@@ -3,6 +3,12 @@
 .application-details {
   position: relative;
 
+  &__centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   &__overlay-loader {
     position: absolute;
     inset: rem(100) rem(16) rem(16);

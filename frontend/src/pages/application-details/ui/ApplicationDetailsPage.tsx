@@ -42,7 +42,7 @@ const ApplicationDetailsPage = () => {
             onClick={() => navigate("/applications")}
           />
         </PageHeader>
-        <div className="section-background">
+        <div className="section-background application-details__centered">
           <Loader text="Загрузка заявки..." />
         </div>
       </div>
@@ -60,7 +60,7 @@ const ApplicationDetailsPage = () => {
             onClick={() => navigate("/applications")}
           />
         </PageHeader>
-        <div className="section-background">
+        <div className="section-background application-details__centered">
           <EmptyState text="Не удалось загрузить заявку." />
         </div>
       </div>

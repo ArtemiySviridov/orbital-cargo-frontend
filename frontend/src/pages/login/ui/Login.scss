@@ -30,14 +30,12 @@
   }
 }
 
-/* 🌌 ORBIT SYSTEM */
 .orbit {
   position: relative;
   width: 380px;
   height: 380px;
 }
 
-/* ЦЕНТР (хаб/станция) */
 .orbit__center {
   width: 14px;
   height: 14px;
@@ -50,7 +48,6 @@
   box-shadow: 0 0 15px var(--color-grey-90), 0 0 36px rgba(255, 255, 255, 0.15);
 }
 
-/* ОРБИТЫ */
 .orbit__ring {
   position: absolute;
   border: 1px dashed var(--color-black-25);
@@ -75,7 +72,6 @@
   height: 330px;
 }
 
-/* СПУТНИК (контейнер-груз) */
 .orbit__satellite {
   width: 10px;
   height: 7px;
@@ -100,7 +96,6 @@
   transform: translateY(-50%);
 }
 
-/* 🔄 АНИМАЦИЯ */
 .orbit__ring--1 {
   animation: rotate 6s linear infinite;
 }
@@ -120,9 +115,6 @@
   }
 }
 
-/* ✨ НОВЫЕ СТИЛИ ✨ */
-
-/* Звездная пыль - парящие частицы */
 .star-dust {
   position: absolute;
   width: 100%;
@@ -159,7 +151,6 @@
   }
 }
 
-/* Поднимающиеся грузы (лифт) */
 .cargo-lift {
   position: absolute;
   width: 100%;
@@ -199,7 +190,6 @@
   }
 }
 
-/* Светящаяся аура */
 .orbit-aura {
   position: absolute;
   width: 430px;
@@ -226,7 +216,6 @@
   }
 }
 
-/* Декоративный текст */
 .orbital-text {
   position: absolute;
   bottom: 11%;
@@ -273,7 +262,6 @@
   }
 }
 
-/* Добавляем тени для глубины */
 .login-page__logo-card {
   &::after {
     content: "";

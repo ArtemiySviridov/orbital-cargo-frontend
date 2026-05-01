@@ -10,11 +10,19 @@
   border-radius: var(--border-radius-m);
   padding: rem(16) rem(12);
   min-height: rem(180);
+  transition: background-color 0.6s ease;
+
+  &--flying {
+    background-color: var(--color-black-06);
+    border-color: var(--color-black-25);
+  }
 
   &__label {
     font-size: rem(13);
     color: var(--color-grey-60);
     text-align: center;
+    position: relative;
+    z-index: 1;
 
     &--orbit { margin-bottom: rem(8); }
     &--earth { margin-top: rem(8); }
@@ -27,24 +35,73 @@
     border-radius: rem(2);
     position: relative;
     margin: 0 auto;
+    overflow: visible;
+  }
+
+  &__particles {
+    position: absolute;
+    inset: -60px -80px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &__particle {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    width: var(--size);
+    height: var(--size);
+    background: radial-gradient(circle, var(--color-grey-90), transparent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: fa-float-particle var(--duration) ease-in-out infinite;
+    animation-delay: var(--delay);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.35);
   }
 
   &__elevator {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: rem(24);
+    transform: translate(-50%, -50%);
     line-height: 1;
     transition: top 0.5s linear;
     user-select: none;
+    z-index: 1;
 
     &--moving {
-      animation: shake 0.4s infinite alternate;
+      animation: fa-shake 0.4s infinite alternate;
+    }
+  }
+
+  &__elevator-icon {
+    width: rem(28);
+    height: rem(28);
+    color: var(--color-grey-75);
+    display: block;
+
+    .flight-animation--flying & {
+      color: var(--color-grey-90);
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
     }
   }
 }
 
-@keyframes shake {
-  from { transform: translateX(calc(-50% - 1px)); }
-  to   { transform: translateX(calc(-50% + 1px)); }
+@keyframes fa-shake {
+  from { transform: translate(calc(-50% - 1px), -50%); }
+  to   { transform: translate(calc(-50% + 1px), -50%); }
+}
+
+@keyframes fa-float-particle {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  50% {
+    opacity: var(--opacity);
+    transform: translate(var(--drift-x), calc(var(--drift-y) * -0.45)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--drift-x) * -0.35), calc(var(--drift-y) * -1)) scale(0.4);
+  }
 }

@@ -66,12 +66,9 @@ const OperatorPanelPage = () => {
   useEffect(() => {
     const currentStatus = elevator?.current_mission?.status;
     if (prevMissionStatus.current === "in_progress" && currentStatus !== "in_progress") {
-      runPreflight().then((pf) => {
-        if (!("error" in pf)) setPreflightResult(pf.data);
-      });
+      setPreflightResult(null);
     }
     prevMissionStatus.current = currentStatus;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elevator?.current_mission?.status]);
 
   const handleLaunch = async () => {
@@ -89,7 +86,22 @@ const OperatorPanelPage = () => {
   if (isLoading) {
     return (
       <div className="operator-panel container">
-        <Loader text="Загружаем данные лифта..." />
+        <PageHeader title="Панель оператора">
+          <div className="operator-panel__tabs">
+            {(Object.keys(TAB_LABELS) as AdminTab[]).map((tab) => (
+              <button
+                key={tab}
+                className={`operator-panel__tab${activeTab === tab ? " operator-panel__tab--active" : ""}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {TAB_LABELS[tab]}
+              </button>
+            ))}
+          </div>
+        </PageHeader>
+        <div className="operator-panel__loading section-background">
+          <Loader text="Загружаем данные лифта..." />
+        </div>
       </div>
     );
   }

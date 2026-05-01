@@ -6,4 +6,5 @@ export interface ApplicationFormButtonsProps {
   isSaveLoading?: boolean;
   isDeleteLoading?: boolean;
   canDelete?: boolean;
+  canSave?: boolean;
 }

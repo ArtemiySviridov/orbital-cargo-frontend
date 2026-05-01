@@ -20,6 +20,18 @@
     z-index: 1;
   }
 
+  &__number {
+    flex-shrink: 0;
+  }
+
+  &__date {
+    flex: 1;
+    text-align: center;
+    padding: 0 rem(12);
+    color: var(--color-grey-65);
+    font-size: rem(14);
+  }
+
   @include hover {
     transform: translateY(-2px);
     background-color: var(--color-black-06);

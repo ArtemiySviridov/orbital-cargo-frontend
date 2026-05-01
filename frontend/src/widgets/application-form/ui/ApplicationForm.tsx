@@ -203,9 +203,10 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
 
   // ── edit mode render ──
   if (type === "edit" && order) {
-    const canAddCargos = order.status !== "in_progress";
+    const isEditable = order.status === "created";
+    const canAddCargos = isEditable;
     const canDeleteOrder =
-      order.status !== "cancelled" &&
+      isEditable &&
       order.cargos.every((c) => c.status !== "in_transit") &&
       order.cargos.every((c) => !c.in_elevator);
 
@@ -239,6 +240,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
               isSaveLoading={isSaving || isCancellingOrder}
               isDeleteLoading={isCancellingOrder}
               canDelete={canDeleteOrder}
+              canSave={isEditable}
             />
           </section>
           <section className="create-application-form__cargos-list">

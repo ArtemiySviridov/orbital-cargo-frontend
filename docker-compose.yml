@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://orbitalcargo.wonderrfau1t.site}
+    ports:
+      - "80:80"
+    restart: unless-stopped

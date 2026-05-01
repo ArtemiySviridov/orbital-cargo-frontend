@@ -1,4 +1,4 @@
-import { RotateCcw, X } from "lucide-react";
+import { Check, RotateCcw, X } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/shared/ui/empty-state";
 import type { ICargoOut, CargoStatus } from "@/entities/application";
@@ -71,23 +71,27 @@ const EditCargosList = ({
                   </div>
                   <span>{cargo.weight_kg} кг</span>
                   <span>{cargo.size.toUpperCase()}</span>
-                  {cargo.status === "pending" && (
-                    <Button
-                      className="edit-cargo-item__action-btn"
-                      icon={markedForDelete ? <RotateCcw size={18} /> : <X size={18} />}
-                      variant="secondary"
-                      disabled={cargo.in_elevator}
-                      type="button"
-                      onClick={() => onToggleDeleteServer(cargo.id)}
-                      title={
-                        cargo.in_elevator
-                          ? "Груз в лифте"
-                          : markedForDelete
-                          ? "Восстановить"
-                          : "Удалить"
-                      }
-                    />
-                  )}
+                  <div className="edit-cargo-item__action-area">
+                    {cargo.status === "pending" ? (
+                      <Button
+                        className="edit-cargo-item__action-btn"
+                        icon={markedForDelete ? <RotateCcw size={18} /> : <X size={18} />}
+                        variant="secondary"
+                        disabled={cargo.in_elevator}
+                        type="button"
+                        onClick={() => onToggleDeleteServer(cargo.id)}
+                        title={
+                          cargo.in_elevator
+                            ? "Груз в лифте"
+                            : markedForDelete
+                            ? "Восстановить"
+                            : "Удалить"
+                        }
+                      />
+                    ) : cargo.status === "delivered" ? (
+                      <Check size={18} className="edit-cargo-item__delivered-icon" />
+                    ) : null}
+                  </div>
                 </div>
               </li>
             ))}

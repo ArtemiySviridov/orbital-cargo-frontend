@@ -4,6 +4,7 @@ import { Button } from "@/shared/ui/button";
 import { Loader } from "@/shared/ui/loader";
 import { useGetOrderDocumentsQuery, useUploadOrderDocumentsMutation } from "@/entities/application";
 import type { IDocumentOut } from "@/entities/application";
+import { useGetManagerOrderDocumentsQuery } from "@/entities/elevator";
 import { tokenStorage } from "@/shared/api/tokenStorage";
 import "./OrderDocuments.scss";
 
@@ -32,9 +33,11 @@ function formatRelativeDate(isoString: string): string {
 
 interface OrderDocumentsProps {
   orderId: number;
+  readonly?: boolean;
+  isManager?: boolean;
 }
 
-const OrderDocuments = ({ orderId }: OrderDocumentsProps) => {
+const OrderDocuments = ({ orderId, readonly = false, isManager = false }: OrderDocumentsProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -42,7 +45,11 @@ const OrderDocuments = ({ orderId }: OrderDocumentsProps) => {
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
-  const { data: documents, isLoading, isError } = useGetOrderDocumentsQuery(orderId);
+  const { data: clientDocs, isLoading: cLoading, isError: cError } = useGetOrderDocumentsQuery(orderId, { skip: isManager });
+  const { data: managerDocs, isLoading: mLoading, isError: mError } = useGetManagerOrderDocumentsQuery(orderId, { skip: !isManager });
+  const documents = isManager ? managerDocs : clientDocs;
+  const isLoading = isManager ? mLoading : cLoading;
+  const isError = isManager ? mError : cError;
   const [uploadDocuments, { isLoading: isUploading }] = useUploadOrderDocumentsMutation();
 
   const handleFile = useCallback(
@@ -102,7 +109,8 @@ const OrderDocuments = ({ orderId }: OrderDocumentsProps) => {
   const handleDownload = async (doc: IDocumentOut) => {
     setDownloadError(null);
     const token = tokenStorage.getAccessToken();
-    const url = `${API_BASE_URL}/orders/${orderId}/documents/${encodeURI(doc.original_filename)}`;
+    const prefix = isManager ? "/manager/orders" : "/orders";
+    const url = `${API_BASE_URL}${prefix}/${orderId}/documents/${encodeURI(doc.original_filename)}`;
     try {
       const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
       if (!response.ok) throw new Error(`${response.status}`);
@@ -131,27 +139,29 @@ const OrderDocuments = ({ orderId }: OrderDocumentsProps) => {
           </p>
         )}
 
-        {!isLoading && !isError && documents?.length === 0 && (
-          <p className="order-documents__message">Документы пока не загружены.</p>
-        )}
-
-        {!isLoading && !isError && documents && documents.length > 0 && (
+        {!isLoading && !isError && (
           <ul className="order-documents__list">
-            {documents.map((doc) => (
-              <li key={doc.id} className="order-documents__item">
-                <span className="order-documents__filename" title={doc.original_filename}>
-                  {doc.original_filename}
-                </span>
-                <span className="order-documents__date">{formatRelativeDate(doc.uploaded_at)}</span>
-                <Button
-                  variant="secondary"
-                  icon={<Download size={16} />}
-                  text="Скачать"
-                  type="button"
-                  onClick={() => handleDownload(doc)}
-                />
+            {documents && documents.length > 0 ? (
+              documents.map((doc) => (
+                <li key={doc.id} className="order-documents__item">
+                  <span className="order-documents__filename" title={doc.original_filename}>
+                    {doc.original_filename}
+                  </span>
+                  <span className="order-documents__date">{formatRelativeDate(doc.uploaded_at)}</span>
+                  <Button
+                    variant="secondary"
+                    icon={<Download size={16} />}
+                    text="Скачать"
+                    type="button"
+                    onClick={() => handleDownload(doc)}
+                  />
+                </li>
+              ))
+            ) : (
+              <li className="order-documents__list-empty">
+                <p className="order-documents__message">Документы пока не загружены.</p>
               </li>
-            ))}
+            )}
           </ul>
         )}
 
@@ -160,42 +170,46 @@ const OrderDocuments = ({ orderId }: OrderDocumentsProps) => {
         )}
       </div>
 
-      <div
-        ref={dropZoneRef}
-        className={`order-documents__dropzone${isDragging ? " order-documents__dropzone--active" : ""}`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <Upload size={20} className="order-documents__upload-icon" />
-        <span className="order-documents__dropzone-hint">Перетащите архив сюда или</span>
-        <Button
-          variant="secondary"
-          text={isUploading ? "Загрузка…" : "Выбрать файл"}
-          disabled={isUploading}
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-        />
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".zip,.tar,.tar.gz,.tgz"
-          className="visually-hidden"
-          onChange={handleInputChange}
-          disabled={isUploading}
-        />
-        <span className="order-documents__dropzone-formats">.zip · .tar · .tar.gz · .tgz · макс. 10 МБ</span>
-      </div>
+      {!readonly && (
+        <>
+          <div
+            ref={dropZoneRef}
+            className={`order-documents__dropzone${isDragging ? " order-documents__dropzone--active" : ""}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <Upload size={20} className="order-documents__upload-icon" />
+            <span className="order-documents__dropzone-hint">Перетащите архив сюда или</span>
+            <Button
+              variant="secondary"
+              text={isUploading ? "Загрузка…" : "Выбрать файл"}
+              disabled={isUploading}
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+            />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".zip,.tar,.tar.gz,.tgz"
+              className="visually-hidden"
+              onChange={handleInputChange}
+              disabled={isUploading}
+            />
+            <span className="order-documents__dropzone-formats">.zip · .tar · .tar.gz · .tgz · макс. 10 МБ</span>
+          </div>
 
-      {uploadError && (
-        <p className="order-documents__message order-documents__message--error" role="alert">
-          {uploadError}
-        </p>
-      )}
-      {uploadSuccess && !uploadError && (
-        <p className="order-documents__message order-documents__message--success" role="status">
-          {uploadSuccess}
-        </p>
+          {uploadError && (
+            <p className="order-documents__message order-documents__message--error" role="alert">
+              {uploadError}
+            </p>
+          )}
+          {uploadSuccess && !uploadError && (
+            <p className="order-documents__message order-documents__message--success" role="status">
+              {uploadSuccess}
+            </p>
+          )}
+        </>
       )}
     </section>
   );

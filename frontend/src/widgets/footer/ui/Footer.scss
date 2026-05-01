@@ -73,7 +73,7 @@
   }
 }
 
-@media (min-width: 768px) {
+@include tablet-above {
   .footer {
     &__sections {
       grid-template-columns: repeat(3, 1fr);
@@ -81,9 +81,9 @@
   }
 }
 
-@media (min-width: 1024px) {
+@include laptop-above {
   .footer {
-    padding: 48px 24px;
+    padding: rem(48) rem(24);
 
     &__top {
       flex-direction: row;
@@ -93,7 +93,7 @@
 
     &__sections {
       grid-template-columns: repeat(4, 1fr);
-      gap: 40px;
+      gap: rem(40);
     }
   }
 }

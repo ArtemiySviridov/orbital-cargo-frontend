@@ -1,9 +1,11 @@
+@use '@shared/lib/styles/helpers' as *;
+
 .login-page {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
+
   &__logo-card {
     border: solid var(--color-black-15);
     border-width: 0 1px;
@@ -15,7 +17,7 @@
     background-color: var(--color-black-06);
     overflow: hidden;
     position: relative;
-    
+
     .login-page__logo-card::before {
       content: "";
       position: absolute;
@@ -27,6 +29,16 @@
       background-size: 40px 40px;
       opacity: 0.08;
     }
+
+    @include tablet {
+      display: none;
+    }
+  }
+
+  @include tablet {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
   }
 }
 

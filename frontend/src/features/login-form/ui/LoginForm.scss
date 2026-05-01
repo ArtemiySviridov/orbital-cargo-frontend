@@ -31,6 +31,11 @@
     color: #ff8a8a;
     font-size: rem(14);
   }
+
+  @include tablet {
+    width: auto;
+    margin: rem(24);
+  }
 }
 
 .login-form::before {

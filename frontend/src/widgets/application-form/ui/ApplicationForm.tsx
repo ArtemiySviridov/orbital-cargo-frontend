@@ -204,6 +204,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
   // ── edit mode render ──
   if (type === "edit" && order) {
     const isEditable = order.status === "created";
+    const canUploadDocuments = order.status !== "delivered" && order.status !== "cancelled";
     const canAddCargos = isEditable;
     const canDeleteOrder =
       isEditable &&
@@ -275,7 +276,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
                 onReset={handleReset}
               />
             ) : (
-              <OrderDocuments orderId={order.id} />
+              <OrderDocuments orderId={order.id} readonly={!canUploadDocuments} />
             )}
           </section>
         </form>

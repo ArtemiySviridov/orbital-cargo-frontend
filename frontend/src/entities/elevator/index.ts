@@ -5,6 +5,7 @@ export {
   useSaveLoadoutMutation,
   useListManagerOrdersQuery,
   useGetManagerOrderQuery,
+  useGetManagerOrderDocumentsQuery,
 } from "./api/elevatorApi";
 
 export {

@@ -1,3 +1,5 @@
+@use '@shared/lib/styles/helpers' as *;
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -6,20 +8,21 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: rem(16);
 }
 
 .modal {
   background: var(--color-black-12);
   border-radius: var(--border-radius-m);
-  padding: 24px;
-  max-width: 420px;
+  padding: rem(24);
+  max-width: rem(420);
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: rem(16);
 
   &__title {
-    font-size: 18px;
+    font-size: rem(18);
     font-weight: 600;
     color: var(--color-white);
   }
@@ -31,7 +34,11 @@
 
   &__actions {
     display: flex;
-    gap: 12px;
+    gap: rem(12);
     justify-content: flex-end;
+  }
+
+  @include mobile {
+    padding: rem(16);
   }
 }

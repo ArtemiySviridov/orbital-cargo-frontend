@@ -7,6 +7,16 @@
   column-gap: rem(24);
   padding: rem(20) rem(24);
 
+  @include tablet {
+    flex-direction: column;
+    row-gap: rem(20);
+
+    &__cargos-list {
+      overflow: visible;
+      min-height: rem(300);
+    }
+  }
+
   // overflow-y: auto;
 
   &__info, &__cargos-list {
@@ -24,6 +34,8 @@
     flex: 1.5;
     display: flex;
     flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
   }
 
   &__tabs {

@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "@shared/api/axiosBaseQuery";
+import type { IDocumentOut } from "@entities/application";
 import type {
   IElevatorOut,
   ILoadoutSaveRequest,
@@ -49,6 +50,10 @@ export const elevatorApi = createApi({
       query: (id) => ({ url: `/manager/orders/${id}` }),
       providesTags: (_result, _error, id) => [{ type: "ManagerOrders", id }],
     }),
+    getManagerOrderDocuments: builder.query<IDocumentOut[], number>({
+      query: (orderId) => ({ url: `/manager/orders/${orderId}/documents` }),
+      providesTags: (_result, _error, orderId) => [{ type: "ManagerOrders", id: `docs-${orderId}` }],
+    }),
   }),
 });
 
@@ -58,4 +63,5 @@ export const {
   useSaveLoadoutMutation,
   useListManagerOrdersQuery,
   useGetManagerOrderQuery,
+  useGetManagerOrderDocumentsQuery,
 } = elevatorApi;

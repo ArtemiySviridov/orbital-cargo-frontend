@@ -89,4 +89,12 @@
       column-gap: rem(40);
     }
   }
+
+  @include mobile {
+    padding-inline: rem(16);
+
+    &__info-block {
+      column-gap: rem(8);
+    }
+  }
 }

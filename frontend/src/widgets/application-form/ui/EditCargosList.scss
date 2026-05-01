@@ -1,3 +1,5 @@
+@use '@/shared/lib/styles/helpers' as *;
+
 .edit-cargo-item {
   &--deleted .cargo-card {
     opacity: 0.45;
@@ -9,9 +11,21 @@
   }
 
   &__elevator-badge {
-    font-size: 11px;
+    font-size: rem(11);
     color: var(--color-orange-01);
     font-weight: 600;
     letter-spacing: 0.03em;
+  }
+
+  &__action-area {
+    width: rem(36);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__delivered-icon {
+    color: var(--color-green-01);
   }
 }

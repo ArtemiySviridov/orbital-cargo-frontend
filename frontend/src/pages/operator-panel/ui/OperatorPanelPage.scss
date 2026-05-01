@@ -58,6 +58,11 @@
       position: relative;
       z-index: 1;
     }
+
+    @include tablet {
+      flex-direction: column;
+      row-gap: rem(15);
+    }
   }
 
   &__mission-buttons {

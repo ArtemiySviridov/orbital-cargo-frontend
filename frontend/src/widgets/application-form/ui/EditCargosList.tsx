@@ -24,6 +24,7 @@ interface EditCargosListProps {
   newCargos: ICargo[];
   deletedNewCargoIds: string[];
   totalCount: number;
+  canEdit: boolean;
   onToggleDeleteServer: (cargoId: number) => void;
   onToggleDeleteNew: (localId: string) => void;
   onReset: () => void;
@@ -34,6 +35,7 @@ const EditCargosList = ({
   newCargos,
   deletedNewCargoIds,
   totalCount,
+  canEdit,
   onToggleDeleteServer,
   onToggleDeleteNew,
   onReset,
@@ -44,13 +46,15 @@ const EditCargosList = ({
     <section className="cargos-list">
       <div className="cargos-list__header">
         <span>Всего грузов: {totalCount}</span>
-        <Button
-          text="Сбросить изменения"
-          variant="secondary"
-          icon={<RotateCcw size={16} />}
-          type="button"
-          onClick={onReset}
-        />
+        {canEdit && (
+          <Button
+            text="Сбросить изменения"
+            variant="secondary"
+            icon={<RotateCcw size={16} />}
+            type="button"
+            onClick={onReset}
+          />
+        )}
       </div>
       <ul className={`cargos-list__list${isEmpty ? " cargos-list__list--empty" : ""}`}>
         {isEmpty ? (
@@ -72,7 +76,7 @@ const EditCargosList = ({
                   <span>{cargo.weight_kg} кг</span>
                   <span>{cargo.size.toUpperCase()}</span>
                   <div className="edit-cargo-item__action-area">
-                    {cargo.status === "pending" ? (
+                    {canEdit && cargo.status === "pending" ? (
                       <Button
                         className="edit-cargo-item__action-btn"
                         icon={markedForDelete ? <RotateCcw size={18} /> : <X size={18} />}
@@ -108,14 +112,16 @@ const EditCargosList = ({
                     </div>
                     <span>{cargo.weight} кг</span>
                     <span>{cargo.size?.toUpperCase()}</span>
-                    <Button
-                      className="edit-cargo-item__action-btn"
-                      icon={isDeleted ? <RotateCcw size={18} /> : <X size={18} />}
-                      variant="secondary"
-                      type="button"
-                      onClick={() => onToggleDeleteNew(cargo.id)}
-                      title={isDeleted ? "Восстановить" : "Удалить"}
-                    />
+                    {canEdit && (
+                      <Button
+                        className="edit-cargo-item__action-btn"
+                        icon={isDeleted ? <RotateCcw size={18} /> : <X size={18} />}
+                        variant="secondary"
+                        type="button"
+                        onClick={() => onToggleDeleteNew(cargo.id)}
+                        title={isDeleted ? "Восстановить" : "Удалить"}
+                      />
+                    )}
                   </div>
                 </li>
               );

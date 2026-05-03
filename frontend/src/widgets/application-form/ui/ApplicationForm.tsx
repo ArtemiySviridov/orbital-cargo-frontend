@@ -49,6 +49,8 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
   const [pendingToggle, setPendingToggle] = useState<PendingToggle | null>(null);
   const [showDeleteOrderModal, setShowDeleteOrderModal] = useState(false);
 
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   const [createOrder, { isLoading: isCreating }] = useCreateOrderMutation();
   const [cancelOrder, { isLoading: isCancellingOrder }] = useCancelOrderMutation();
   const [saveOrderCargos, { isLoading: isSaving }] = useSaveOrderCargosMutation();
@@ -156,39 +158,44 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
   // ── edit: save ──
   const handleSave = async () => {
     if (!order) return;
+    setSaveError(null);
 
     const activeDraft = draftServerCargos.filter((d) => !d.markedForDelete);
     const activeNew = newCargos.filter((c) => !deletedNewCargoIds.includes(c.id));
     const totalActive = activeDraft.length + activeNew.length;
 
-    if (totalActive === 0) {
-      await cancelOrder(order.id).unwrap();
-      navigate("/applications");
-      return;
+    try {
+      if (totalActive === 0) {
+        await cancelOrder(order.id).unwrap();
+        navigate("/applications");
+        return;
+      }
+
+      const savedOrder = await saveOrderCargos({
+        orderId: order.id,
+        body: {
+          cargos: [
+            ...activeDraft.map((d) => ({
+              id: d.cargo.id,
+              name: d.cargo.name,
+              weight_kg: d.cargo.weight_kg,
+              size: d.cargo.size,
+            })),
+            ...activeNew.map((c) => ({
+              name: c.name,
+              weight_kg: parseFloat(c.weight),
+              size: c.size as CargoSize,
+            })),
+          ],
+        },
+      }).unwrap();
+
+      setDraftServerCargos(savedOrder.cargos.map((c) => ({ cargo: c, markedForDelete: false })));
+      dispatch(cargoActions.deleteAllCargos());
+      setDeletedNewCargoIds([]);
+    } catch {
+      setSaveError("Не удалось сохранить заявку. Попробуйте ещё раз.");
     }
-
-    const savedOrder = await saveOrderCargos({
-      orderId: order.id,
-      body: {
-        cargos: [
-          ...activeDraft.map((d) => ({
-            id: d.cargo.id,
-            name: d.cargo.name,
-            weight_kg: d.cargo.weight_kg,
-            size: d.cargo.size,
-          })),
-          ...activeNew.map((c) => ({
-            name: c.name,
-            weight_kg: parseFloat(c.weight),
-            size: c.size as CargoSize,
-          })),
-        ],
-      },
-    }).unwrap();
-
-    setDraftServerCargos(savedOrder.cargos.map((c) => ({ cargo: c, markedForDelete: false })));
-    dispatch(cargoActions.deleteAllCargos());
-    setDeletedNewCargoIds([]);
   };
 
   // ── edit: delete order ──
@@ -234,6 +241,9 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
             {hasChanges && (
               <span className="create-application-form__unsaved-badge">● Не сохранено</span>
             )}
+            {saveError && (
+              <p className="form-error">{saveError}</p>
+            )}
             <ApplicationFormButtons
               type="edit"
               onSave={handleSave}
@@ -241,7 +251,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
               isSaveLoading={isSaving || isCancellingOrder}
               isDeleteLoading={isCancellingOrder}
               canDelete={canDeleteOrder}
-              canSave={isEditable}
+              canSave={isEditable && hasChanges}
             />
           </section>
           <section className="create-application-form__cargos-list">
@@ -271,6 +281,7 @@ const ApplicationForm = ({ type, order }: ApplicationFormProps) => {
                 newCargos={newCargos}
                 deletedNewCargoIds={deletedNewCargoIds}
                 totalCount={totalCount}
+                canEdit={isEditable}
                 onToggleDeleteServer={handleToggleDeleteServer}
                 onToggleDeleteNew={handleToggleDeleteNew}
                 onReset={handleReset}

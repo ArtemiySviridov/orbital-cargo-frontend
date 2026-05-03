@@ -53,6 +53,7 @@ const FillLiftPage = () => {
 
   const [sizeFilter, setSizeFilter] = useState<CargoSize | undefined>(undefined);
   const [draft, setDraft] = useState<Map<number, number>>(new Map());
+  const draftCargosCache = useRef<Map<number, ICargoOut>>(new Map());
 
   const { data: availableCargos = [], isLoading: cargosLoading, isFetching: cargosFetching, refetch: refetchCargos } =
     useGetAvailableCargosQuery(
@@ -67,12 +68,13 @@ const FillLiftPage = () => {
   useEffect(() => {
     if (elevator && !draftInitialized.current) {
       setDraft(buildDraftFromElevator(elevator));
+      draftCargosCache.current = new Map();
       draftInitialized.current = true;
     }
   }, [elevator]);
 
   const cargosById = useMemo<Map<number, ICargoOut>>(() => {
-    const map = new Map<number, ICargoOut>();
+    const map = new Map<number, ICargoOut>(draftCargosCache.current);
     elevator?.slots.forEach((s) => {
       if (s.cargo) map.set(s.cargo.id, s.cargo);
     });
@@ -102,8 +104,9 @@ const FillLiftPage = () => {
   const isInTransit = elevator?.location === "in_transit";
   const isDisabled = isInTransit || isSaving;
 
-  const handleAddToSlot = (slotId: number, cargoId: number) => {
-    setDraft((prev) => new Map(prev).set(slotId, cargoId));
+  const handleAddToSlot = (slotId: number, cargo: ICargoOut) => {
+    draftCargosCache.current.set(cargo.id, cargo);
+    setDraft((prev) => new Map(prev).set(slotId, cargo.id));
     setError(null);
   };
 
@@ -119,6 +122,7 @@ const FillLiftPage = () => {
   const handleCancel = () => {
     if (elevator) {
       setDraft(buildDraftFromElevator(elevator));
+      draftCargosCache.current = new Map();
       setError(null);
     }
   };
@@ -133,6 +137,7 @@ const FillLiftPage = () => {
 
     if ("data" in result && result.data) {
       setDraft(buildDraftFromElevator(result.data));
+      draftCargosCache.current = new Map();
       setError(null);
     } else {
       const err = result.error as { status?: number; data?: { detail?: string } };

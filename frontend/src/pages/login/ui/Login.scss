@@ -143,8 +143,9 @@
   background: radial-gradient(circle, var(--color-grey-90), transparent);
   border-radius: 50%;
   opacity: 0;
-  animation: float-particle var(--duration) ease-in-out infinite;
-  animation-delay: var(--delay);
+  animation-name: float-particle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
 }
 
@@ -179,8 +180,9 @@
   background: var(--color-grey-80);
   border-radius: 1px;
   opacity: 0;
-  animation: rise-cargo var(--duration) ease-in-out infinite;
-  animation-delay: var(--delay);
+  animation-name: rise-cargo;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
   box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
 }
 

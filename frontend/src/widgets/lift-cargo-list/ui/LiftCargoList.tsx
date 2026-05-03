@@ -15,7 +15,7 @@ interface LiftCargoListProps {
   direction: OrderDirection;
   sizeFilter: CargoSize | undefined;
   onSizeFilterChange: (size: CargoSize | undefined) => void;
-  onAddToSlot: (slotId: number, cargoId: number) => void;
+  onAddToSlot: (slotId: number, cargo: ICargoOut) => void;
   disabled: boolean;
   isLoading: boolean;
   isFetching?: boolean;
@@ -38,7 +38,7 @@ interface CargoItemProps {
   cargo: ICargoOut;
   slots: ISlotOut[];
   draft: Map<number, number>;
-  onAdd: (slotId: number, cargoId: number) => void;
+  onAdd: (slotId: number, cargo: ICargoOut) => void;
   disabled: boolean;
 }
 
@@ -56,7 +56,7 @@ const CargoItem = ({ cargo, slots, draft, onAdd, disabled }: CargoItemProps) => 
 
   const handleAdd = () => {
     if (!selectedSlot) return;
-    onAdd(Number(selectedSlot.value), cargo.id);
+    onAdd(Number(selectedSlot.value), cargo);
     setSelectedSlot(undefined);
   };
 

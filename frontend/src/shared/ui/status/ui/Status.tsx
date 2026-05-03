@@ -10,6 +10,8 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: "Отменена",
   pending: "Ожидает",
   in_transit: "В доставке",
+  lost: "Потеряна",
+  partially_lost: "Частично потеряна",
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -17,6 +19,8 @@ const STATUS_COLORS: Record<string, string> = {
   in_transit: "#E6BB1F",
   delivered: "#6FD65D",
   cancelled: "#E50000",
+  lost: "#E50000",
+  partially_lost: "#E50000",
 };
 
 const Status = (props: IStatusProps) => {

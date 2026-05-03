@@ -39,12 +39,12 @@ const Login = () => {
       style: {
         "--x": `${x}%`,
         "--y": `${y}%`,
-        "--delay": `${delay}s`,
-        "--duration": `${duration}s`,
         "--size": `${size}px`,
         "--drift-x": `${driftX}px`,
         "--drift-y": `${driftY}px`,
         "--opacity": opacity,
+        animationDuration: `${duration}s`,
+        animationDelay: `${delay}s`,
       } as CSSProperties,
     };
   });
@@ -63,11 +63,11 @@ const Login = () => {
       style: {
         "--x": `${x}%`,
         "--y": `${y}%`,
-        "--delay": `${delay}s`,
-        "--duration": `${duration}s`,
         "--size": `${size}px`,
         "--drift-x": `${driftX}px`,
         "--opacity": opacity,
+        animationDuration: `${duration}s`,
+        animationDelay: `${delay}s`,
       } as CSSProperties,
     };
   });

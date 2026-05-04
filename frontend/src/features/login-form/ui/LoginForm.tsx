@@ -30,7 +30,7 @@ const LoginForm = () => {
       : "Не удалось авторизоваться. Проверьте логин и пароль.";
 
   return (
-    <div className='login-form'>
+    <form className='login-form' onSubmit={(e) => { e.preventDefault(); void handleLogin(); }}>
       <h2 className='login-form__title'>
         Войдите в систему
       </h2>
@@ -52,13 +52,12 @@ const LoginForm = () => {
         <Button
           variant="primary"
           disabled={isLoading}
-          type='button'
+          type='submit'
           text='Войти'
-          onClick={handleLogin}
         />
       </div>
       {error && <p className='login-form__error'>{errorMessage}</p>}
-    </div>
+    </form>
   );
 };
 

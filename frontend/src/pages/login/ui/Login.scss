@@ -1,5 +1,23 @@
 @use '@shared/lib/styles/helpers' as *;
 
+@property --drift-x {
+  syntax: '<length>';
+  initial-value: 0px;
+  inherits: false;
+}
+
+@property --drift-y {
+  syntax: '<length>';
+  initial-value: 0px;
+  inherits: false;
+}
+
+@property --opacity {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: false;
+}
+
 .login-page {
   height: 100vh;
   display: flex;
